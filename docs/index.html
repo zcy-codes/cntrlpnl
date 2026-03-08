@@ -945,28 +945,29 @@ pre::before {
   </div>
 
   <div class="doc-section" id="s-script">
-    <h2>Script tag</h2>
-    <p>The simplest way. Download <code>cntrlpnl.js</code> and include it in your HTML:</p>
-    <pre data-lang="html"><div class="code-inner"><span class="str">&lt;script src="cntrlpnl.js"&gt;&lt;/script&gt;</span></div></pre>
-    <p>Place it anywhere in <code>&lt;head&gt;</code> or before your closing <code>&lt;body&gt;</code> tag. The library wraps itself in an IIFE so it won't pollute your global scope beyond <code>window.pnlStates</code> and reading <code>window.pnlConfigs</code>.</p>
-
+    <h2>CDN (recommended)</h2>
+    <p>The easiest way — no download, no npm, no setup. Just drop this script tag into your HTML:</p>
+    <pre data-lang="html"><div class="code-inner"><span class="str">&lt;script src="https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.js"&gt;&lt;/script&gt;</span></div></pre>
+    <p>Served by <a href="https://www.jsdelivr.com" target="_blank">jsDelivr</a> — a fast, reliable public CDN with global edge caching. The file is pulled straight from the GitHub repo, so it's always up to date with the latest version on <code>main</code>.</p>
+    <p>Place the tag anywhere in <code>&lt;head&gt;</code> or before your closing <code>&lt;body&gt;</code> tag. The library wraps itself in an IIFE so it won't pollute your global scope beyond <code>window.pnlStates</code> and reading <code>window.pnlConfigs</code>.</p>
     <div class="callout">
-      <p><strong>Order matters.</strong> Set <code>window.pnlConfigs</code> before or after the script — cntrlPNL waits for <code>DOMContentLoaded</code> before initialising, so either order works.</p>
+      <p><strong>Order doesn't matter.</strong> Set <code>window.pnlConfigs</code> before or after the script tag — cntrlPNL waits for <code>DOMContentLoaded</code> before initialising, so either order works.</p>
     </div>
   </div>
 
   <div class="doc-section" id="s-cdn">
-    <h2>From a CDN</h2>
-    <p>If your project is already hosted, you can link straight to the raw file on GitHub:</p>
-    <pre data-lang="html"><div class="code-inner"><span class="str">&lt;script src="https://raw.githubusercontent.com/zcy-codes/cntrlpnl/main/cntrlPNL.js"&gt;&lt;/script&gt;</span></div></pre>
+    <h2>Self-hosted</h2>
+    <p>If you'd rather serve the file yourself, download it directly from GitHub and add it to your project:</p>
+    <pre data-lang="html"><div class="code-inner"><span class="str">&lt;script src="cntrlPNL.js"&gt;&lt;/script&gt;</span></div></pre>
+    <p>Grab the file from <a href="https://github.com/zcy-codes/cntrlpnl/blob/main/cntrlPNL.js" target="_blank">github.com/zcy-codes/cntrlpnl</a> — click the file, then the download icon in the top right.</p>
     <div class="callout warn">
-      <p><strong>Note:</strong> Raw GitHub URLs are not a CDN — they're rate limited and may be slow. For production use, serve the file yourself or use a proper CDN like jsDelivr.</p>
+      <p><strong>Don't use raw.githubusercontent.com.</strong> Raw GitHub URLs are rate limited and not suitable for production. Use the jsDelivr CDN link above or self-host the file instead.</p>
     </div>
   </div>
 
   <div class="doc-section" id="s-verify">
     <h2>Verify it's working</h2>
-    <p>After including the script, paste this in your browser console to confirm the library loaded:</p>
+    <p>After including the script tag, paste this in your browser console to confirm the library loaded:</p>
     <pre data-lang="js"><div class="code-inner"><span class="key">window</span>.pnlConfigs = [{ <span class="key">ui</span>: { <span class="key">title</span>: <span class="str">'test'</span> }, <span class="key">controls</span>: [
   { <span class="key">type</span>: <span class="str">'slider'</span>, <span class="key">key</span>: <span class="str">'x'</span>, <span class="key">default</span>: <span class="num">50</span> }
 ]}];</div></pre>
@@ -990,7 +991,7 @@ pre::before {
     <h2>Your first panel</h2>
     <p>Set <code>window.pnlConfigs</code> to an array of panel config objects. Each config produces one panel.</p>
 
-    <pre data-lang="html"><div class="code-inner"><span class="str">&lt;script src="cntrlpnl.js"&gt;&lt;/script&gt;</span>
+    <pre data-lang="html"><div class="code-inner"><span class="str">&lt;script src="https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.js"&gt;&lt;/script&gt;</span>
 <span class="str">&lt;script&gt;</span>
   <span class="key">window</span>.pnlConfigs = [
     {
@@ -1911,7 +1912,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
         const showModal = m => { const ov=document.createElement('div'); ov.className='pnl-modal-overlay'; ov.style.display='flex'; ov.innerHTML=`<div class="pnl-modal"><h3>${m.title}</h3><p>${m.text||''}</p><div class="pnl-modal-btns"></div></div>`; m.buttons.forEach(b=>{ const btn=document.createElement('button'); btn.className='pnl-modal-btn'; btn.innerText=b.label; btn.onclick=()=>{if(b.action==='close')ov.remove();}; ov.querySelector('.pnl-modal-btns').appendChild(btn); }); document.body.appendChild(ov); };
         const bind = (key,fn) => { if(!bindings.has(key))bindings.set(key,[]); bindings.get(key).push(fn); };
         const makeScrub = (el, getVal, setVal, step, min, max) => { const dec=String(step).includes('.')?String(step).split('.')[1].length:0; const clamp=v=>Math.min(max??Infinity,Math.max(min??-Infinity,parseFloat(v.toFixed(dec+4)))); let startY,startV,moved; el.addEventListener('mousedown',e=>{ if(document.activeElement===el)return; e.preventDefault(); startY=e.clientY; startV=getVal(); moved=false; const onMove=e=>{if(Math.abs(e.clientY-startY)>2)moved=true;setVal(clamp(startV+(startY-e.clientY)*step));}; const onUp=()=>{window.removeEventListener('mousemove',onMove);window.removeEventListener('mouseup',onUp);if(!moved){el.focus();el.select();}}; window.addEventListener('mousemove',onMove); window.addEventListener('mouseup',onUp); }); el.addEventListener('change',e=>{const v=parseFloat(e.target.value);if(!isNaN(v))setVal(clamp(v));}); el.addEventListener('keydown',e=>{if(e.key==='Enter')el.blur();}); };
-        const addTip = (el,text) => { el.addEventListener('mouseenter',()=>{tip.innerText=text;tip.style.visibility='visible';}); el.addEventListener('mousemove',e=>{tip.style.left=(e.clientX-200)+'px';tip.style.top=(e.clientY-8)+'px';}); el.addEventListener('mouseleave',()=>tip.style.visibility='hidden'); };
+        const addTip = (el,text) => { el.addEventListener('mouseenter',()=>{tip.innerText=text;tip.style.visibility='visible';}); el.addEventListener('mousemove',e=>{const tw=180,th=40,vw=window.innerWidth,vh=window.innerHeight;let lx=e.clientX+14,ly=e.clientY-10;if(lx+tw>vw)lx=e.clientX-tw-8;if(ly+th>vh)ly=e.clientY-th-4;tip.style.left=lx+'px';tip.style.top=ly+'px';}); el.addEventListener('mouseleave',()=>tip.style.visibility='hidden'); };
         const buildColorPicker = (item, cont) => { const modes=item.modes||[]; const hasBox=modes.includes('box'),hasSlider=modes.includes('slider'),hasOpacity=modes.includes('opacity'),hasRgb=modes.includes('rgb'),hasExtras=hasBox||hasSlider||hasOpacity||hasRgb; let currentHex=proxy[item.key]||'#ff0000',opacity=1,hue=0; const {r:ir,g:ig,b:ib}=hexToRgb(currentHex); hue=rgbToHsl(ir,ig,ib).h; const block=document.createElement('div'); block.className='pnl-color-block'; const headRow=document.createElement('div'); headRow.className='pnl-color-head-row'; const rowLbl=document.createElement('div'); rowLbl.className='pnl-label'; rowLbl.innerText=item.label||item.key; if(item.info){rowLbl.classList.add('has-tip');addTip(rowLbl,item.info);} const inlineWrap=document.createElement('div'); inlineWrap.className='pnl-color-inline'; const swatch=document.createElement('div'); swatch.className='pnl-color-swatch'; swatch.style.background=currentHex; const hexInp=document.createElement('input'); hexInp.className='pnl-color-hex-inp'; hexInp.type='text'; hexInp.value=currentHex; hexInp.spellcheck=false; inlineWrap.append(swatch,hexInp); headRow.append(rowLbl,inlineWrap); block.appendChild(headRow); let extras,canvas,ctx,boxHandle,hueSlider,swatchLg,opRange,opNum,opGrad,rInp,gInp,bInp; if(hasExtras){extras=document.createElement('div'); extras.className='pnl-color-extras'; if(hasBox){canvas=document.createElement('canvas'); canvas.className='pnl-color-canvas'; canvas.height=80; boxHandle=document.createElement('div'); boxHandle.style.cssText='position:absolute;width:8px;height:8px;border-radius:50%;border:2px solid #fff;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 3px rgba(0,0,0,.6);'; const cw=document.createElement('div'); cw.style.cssText='position:relative;margin-bottom:2px;'; cw.append(canvas,boxHandle); extras.appendChild(cw); const drawBox=()=>{const w=canvas.offsetWidth||230,h=canvas.height;canvas.width=w;ctx=canvas.getContext('2d');ctx.fillStyle=`hsl(${hue},100%,50%)`;ctx.fillRect(0,0,w,h);const wg=ctx.createLinearGradient(0,0,w,0);wg.addColorStop(0,'rgba(255,255,255,1)');wg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=wg;ctx.fillRect(0,0,w,h);const bg=ctx.createLinearGradient(0,0,0,h);bg.addColorStop(0,'rgba(0,0,0,0)');bg.addColorStop(1,'rgba(0,0,0,1)');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);}; const pickBox=e=>{const r=canvas.getBoundingClientRect(),w=r.width,h=r.height;const x=Math.max(0,Math.min(w,e.clientX-r.left)),y=Math.max(0,Math.min(h,e.clientY-r.top));boxHandle.style.left=x+'px';boxHandle.style.top=y+'px';const {r:rr,g:gg,b:bb}=hslToRgb(hue,(x/w)*100,100-(y/h)*50*(1+(1-x/w)));updateDOM(rgbToHex(rr,gg,bb));proxy[item.key]=currentHex;}; canvas.addEventListener('mousedown',e=>{drawBox();pickBox(e);const mv=e2=>pickBox(e2);const up=()=>{window.removeEventListener('mousemove',mv);window.removeEventListener('mouseup',up);};window.addEventListener('mousemove',mv);window.addEventListener('mouseup',up);}); requestAnimationFrame(drawBox);} if(hasSlider){const hr=document.createElement('div'); hr.className='pnl-color-hue-row'; swatchLg=document.createElement('div'); swatchLg.className='pnl-color-swatch-lg'; swatchLg.style.background=currentHex; hueSlider=document.createElement('input'); hueSlider.type='range'; hueSlider.className='pnl-color-hue-slider'; hueSlider.min=0; hueSlider.max=360; hueSlider.step=1; hueSlider.value=Math.round(hue); hueSlider.oninput=e=>{hue=parseInt(e.target.value);const {r,g,b}=hexToRgb(currentHex);const {s,l}=rgbToHsl(r,g,b);const {r:nr,g:ng,b:nb}=hslToRgb(hue,s,l);updateDOM(rgbToHex(nr,ng,nb));proxy[item.key]=currentHex;}; hr.append(swatchLg,hueSlider); extras.appendChild(hr);} if(hasOpacity){const or=document.createElement('div'); or.className='pnl-color-opacity-row'; const track=document.createElement('div'); track.className='pnl-color-opacity-track'; const checker=document.createElement('div'); checker.className='pnl-color-opacity-checker'; opGrad=document.createElement('div'); opGrad.className='pnl-color-opacity-grad'; opGrad.style.background=`linear-gradient(to right,transparent,${currentHex})`; opRange=document.createElement('input'); opRange.type='range'; opRange.className='pnl-color-opacity-range'; opRange.min=0; opRange.max=1; opRange.step=0.01; opRange.value=1; opNum=document.createElement('input'); opNum.className='pnl-opacity-num'; opNum.type='text'; opNum.value='1.00'; opRange.oninput=e=>{opacity=parseFloat(e.target.value);opNum.value=opacity.toFixed(2);if(item.onOpacity)item.onOpacity(opacity);}; track.append(checker,opGrad,opRange); or.append(track,opNum); extras.appendChild(or);} if(hasRgb){const {r,g,b}=hexToRgb(currentHex); const rgbEl=document.createElement('div'); rgbEl.className='pnl-rgb-row-inner'; const mkF=(l,v)=>{const f=document.createElement('div');f.className='pnl-rgb-field';const lb=document.createElement('span');lb.className='pnl-rgb-lbl';lb.innerText=l;const i=document.createElement('input');i.className='pnl-rgb-inp';i.type='text';i.value=v;f.append(lb,i);return{f,i};}; const {f:rf,i:ri}=mkF('R',r);const {f:gf,i:gi}=mkF('G',g);const {f:bf,i:bi}=mkF('B',b); rInp=ri;gInp=gi;bInp=bi; const syncRgb=()=>{const rv=parseInt(rInp.value),gv=parseInt(gInp.value),bv=parseInt(bInp.value);if(![rv,gv,bv].some(isNaN)){updateDOM(rgbToHex(rv,gv,bv));proxy[item.key]=currentHex;}}; [rInp,gInp,bInp].forEach(i=>{i.addEventListener('change',syncRgb);i.addEventListener('keydown',e=>{if(e.key==='Enter')syncRgb();});}); rgbEl.append(rf,gf,bf); extras.appendChild(rgbEl);} block.appendChild(extras);} const updateDOM=hex=>{currentHex=hex;swatch.style.background=hex;if(document.activeElement!==hexInp)hexInp.value=hex;if(hueSlider){const {r,g,b}=hexToRgb(hex);const {h}=rgbToHsl(r,g,b);hue=h;hueSlider.value=Math.round(h);}if(swatchLg)swatchLg.style.background=hex;if(rInp){const {r,g,b}=hexToRgb(hex);if(document.activeElement!==rInp)rInp.value=r;if(document.activeElement!==gInp)gInp.value=g;if(document.activeElement!==bInp)bInp.value=b;}if(opGrad)opGrad.style.background=`linear-gradient(to right,transparent,${hex})`;}; hexInp.addEventListener('change',e=>{const v=e.target.value.trim();if(isHex(v)){updateDOM(v);proxy[item.key]=currentHex;}else hexInp.value=currentHex;}); hexInp.addEventListener('keydown',e=>{if(e.key==='Enter'){const v=hexInp.value.trim();if(isHex(v)){updateDOM(v);proxy[item.key]=currentHex;}hexInp.blur();}}); bind(item.key,v=>updateDOM(v)); cont.appendChild(block); };
         const addTabs = (item, cont) => { const bar=document.createElement('div'); bar.className='pnl-tab-bar'; const panels=document.createElement('div'); panels.className='pnl-tab-panels'; let active=0; const tabEls=[],panelEls=[]; const activate=i=>{const dir=i>active?'slide-left':'slide-right';tabEls.forEach((t,ti)=>t.classList.toggle('is-active',ti===i));panelEls.forEach((p,pi)=>{p.classList.remove('is-active','slide-left','slide-right');if(pi===i){p.classList.add('is-active');if(i!==active)p.classList.add(dir);}});active=i;}; item.tabs.forEach((tab,i)=>{const t=document.createElement('div');t.className=`pnl-tab${i===0?' is-active':''}`;t.innerText=tab.label;t.onclick=()=>activate(i);bar.appendChild(t);tabEls.push(t);const p=document.createElement('div');p.className=`pnl-tab-panel${i===0?' is-active':''}`;tab.children.forEach(c=>addRow(c,p));panels.appendChild(p);panelEls.push(p);}); cont.appendChild(bar); cont.appendChild(panels); };
         const addRow = (item, cont) => {
@@ -2127,17 +2128,17 @@ document.addEventListener('DOMContentLoaded', () => {
         buildDemo('demo-slider', {
           ui: { title: 'slider', accent: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00ff88' },
           controls: [
-            { type: 'slider', key: 'exposure', label: 'exposure', default: 1.0, min: 0, max: 2, step: 0.01, info: 'scene exposure multiplier' },
-            { type: 'slider', key: 'contrast', label: 'contrast', default: 50, min: 0, max: 100, step: 1 },
-            { type: 'slider', key: 'gamma',    label: 'gamma',    default: 2.2, min: 0.5, max: 4, step: 0.1 },
+            { type: 'slider', key: 'exposure', label: 'exposure', default: 1.0, min: 0, max: 2, step: 0.01, info: 'overall scene brightness multiplier' },
+            { type: 'slider', key: 'contrast', label: 'contrast', default: 50, min: 0, max: 100, step: 1, info: 'increase to make darks darker and brights brighter' },
+            { type: 'slider', key: 'gamma',    label: 'gamma',    default: 2.2, min: 0.5, max: 4, step: 0.1, info: 'gamma correction — 2.2 is standard for sRGB displays' },
           ]
         });
         buildDemo('demo-toggle', {
           ui: { title: 'toggle' },
           controls: [
-            { type: 'toggle', key: 'wireframe',  label: 'wireframe',  default: false },
-            { type: 'toggle', key: 'shadows',    label: 'shadows',    default: true },
-            { type: 'toggle', key: 'postfx',     label: 'post fx',    default: false },
+            { type: 'toggle', key: 'wireframe',  label: 'wireframe',  default: false, info: 'render geometry as wireframe' },
+            { type: 'toggle', key: 'shadows',    label: 'shadows',    default: true,  info: 'enable shadow casting and receiving' },
+            { type: 'toggle', key: 'postfx',     label: 'post fx',    default: false, info: 'enable post-processing effects pass' },
           ]
         });
         buildDemo('demo-color', {
