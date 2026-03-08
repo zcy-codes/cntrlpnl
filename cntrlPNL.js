@@ -1,16 +1,17 @@
+//cntrlPNL v3.1 by zach
 (function () {
     window.pnlStates = [];
 
-    /* ─── Global tooltip ──────────────────────────────────────────────── */
+    
     const tip = document.createElement('div');
     tip.style = 'position:fixed;background:#1a1a1e;border:1px solid var(--accent);color:#ccc;padding:6px 10px;font-size:10px;z-index:200000;visibility:hidden;pointer-events:none;max-width:180px;line-height:1.5;font-family:monospace;';
     document.body.appendChild(tip);
 
-    /* ─── Hex / RGB helpers ───────────────────────────────────────────── */
+    
     const hexToRgb = h => ({ r: parseInt(h.slice(1,3),16), g: parseInt(h.slice(3,5),16), b: parseInt(h.slice(5,7),16) });
     const rgbToHex = (r,g,b) => '#' + [r,g,b].map(v => Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
     const isHex   = h => /^#[0-9a-fA-F]{6}$/.test(h);
-    /* hsl <-> rgb */
+    
     const rgbToHsl = (r,g,b) => { r/=255;g/=255;b/=255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b); let h,s,l=(mx+mn)/2; if(mx===mn){h=s=0;}else{const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);switch(mx){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;default:h=((r-g)/d+4)/6;}} return {h:h*360,s:s*100,l:l*100}; };
     const hslToRgb = (h,s,l) => { h/=360;s/=100;l/=100; const hue2rgb=(p,q,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;}; let r,g,b; if(s===0){r=g=b=l;}else{const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q;r=hue2rgb(p,q,h+1/3);g=hue2rgb(p,q,h);b=hue2rgb(p,q,h-1/3);} return {r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)}; };
 
@@ -21,7 +22,7 @@
             const s = document.createElement('style');
             s.id = 'pnl-css';
             s.innerHTML = `
-            /* ── Core ──────────────────────────────────────────── */
+            
             .pnl-main {
                 position:fixed; right:20px; width:256px;
                 background:#1f1f22; border:1px solid #2e2e33;
@@ -30,7 +31,7 @@
                 box-shadow:0 8px 32px rgba(0,0,0,.6);
             }
 
-            /* ── Panel body: animated open/close ───────────────── */
+            
             .pnl-body {
                 overflow:hidden;
                 max-height:2000px;
@@ -48,7 +49,7 @@
                 overflow:hidden;
             }
 
-            /* ── Header ─────────────────────────────────────────── */
+            
             .pnl-head {
                 display:flex; align-items:center; justify-content:space-between;
                 padding:0 8px 0 10px; height:30px;
@@ -58,7 +59,7 @@
             .p-btn { color:#555; cursor:pointer; font-size:11px; padding:4px; transition:color .1s; }
             .p-btn:hover { color:var(--accent); }
 
-            /* ── Standard row ───────────────────────────────────── */
+            
             .pnl-row {
                 display:grid; grid-template-columns:72px 1fr;
                 align-items:center; min-height:28px;
@@ -70,10 +71,10 @@
             .pnl-label.has-tip:hover { color:var(--accent); }
             .pnl-ctrls { display:flex; align-items:center; gap:5px; min-width:0; justify-content:flex-end; }
 
-            /* ── Separator ──────────────────────────────────────── */
+            
             .pnl-sep { padding:4px 8px 4px 10px; min-height:22px; display:flex; align-items:center; justify-content:center; background:#1a1a1d; border-bottom:1px solid #2e2e33; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.12em; color:#666; }
 
-            /* ── Slider ─────────────────────────────────────────── */
+            
             .pnl-slider-row { padding:5px 8px 6px 10px; border-bottom:1px solid #28282d; }
             .pnl-slider-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }
             .pnl-slider-track-wrap { position:relative; height:14px; display:flex; align-items:center; }
@@ -92,7 +93,7 @@
             }
             .pnl-slider-fill { position:absolute; left:0; height:2px; background:var(--accent); opacity:.25; border-radius:0; pointer-events:none; z-index:0; }
 
-            /* ── Numeric input (scrub + type) ───────────────────── */
+            
             .pnl-num {
                 font-size:10px; color:var(--accent); background:transparent;
                 border:none; border-bottom:1px dotted #444; outline:none;
@@ -105,26 +106,26 @@
             .pnl-num.narrow{ width:36px; cursor:ew-resize; }
             .pnl-num.narrow:focus { cursor:text; border-bottom:1px solid var(--accent); }
 
-            /* ── Toggle ─────────────────────────────────────────── */
+            
             .pnl-toggle { width:28px; height:14px; border-radius:7px; background:#333; border:1px solid #444; cursor:pointer; position:relative; transition:background .15s, border-color .15s; flex-shrink:0; }
             .pnl-toggle.on { background:var(--accent); border-color:var(--accent); }
             .pnl-toggle::after { content:''; position:absolute; width:10px; height:10px; border-radius:50%; background:#888; top:1px; left:1px; transition:transform .15s, background .15s; }
             .pnl-toggle.on::after { transform:translateX(14px); background:#000; }
 
-            /* ── Color control ──────────────────────────────────── */
+            
             .pnl-color-block { border-bottom:1px solid #28282d; }
 
-            /* inline row: swatch + hex + RGB toggle */
+            
             .pnl-color-head-row { display:grid; grid-template-columns:72px 1fr; align-items:center; min-height:28px; padding:0 8px 0 10px; gap:6px; }
             .pnl-color-inline { display:flex; align-items:center; gap:6px; justify-content:flex-end; }
             .pnl-color-swatch { width:16px; height:16px; border-radius:2px; border:1px solid #444; cursor:pointer; flex-shrink:0; }
             .pnl-color-hex-inp { flex:1; min-width:0; background:transparent; border:none; border-bottom:1px solid transparent; color:var(--accent); font-size:10px; font-family:inherit; outline:none; text-align:right; cursor:text; }
             .pnl-color-hex-inp:focus { border-bottom-color:var(--accent); }
 
-            /* always-visible extras panel */
+            
             .pnl-color-expander-inner { padding:7px 10px 9px; background:#17171a; border-top:1px solid #28282d; display:flex; flex-direction:column; gap:7px; }
 
-            /* gradient box picker */
+            
             .pnl-color-canvas { width:100%; height:80px; cursor:crosshair; border-radius:2px; display:block; }
             .pnl-color-hue-row { display:flex; align-items:center; gap:6px; }
             .pnl-color-hue-slider {
@@ -136,7 +137,7 @@
             .pnl-color-hue-slider::-moz-range-thumb { width:10px; height:10px; border-radius:2px; background:var(--accent); border:2px solid #fff; }
             .pnl-color-swatch-lg { width:18px; height:18px; border-radius:2px; border:1px solid #444; flex-shrink:0; }
 
-            /* opacity slider */
+            
             .pnl-color-opacity-row { display:flex; align-items:center; gap:6px; }
             .pnl-color-opacity-track { flex:1; height:8px; border-radius:4px; position:relative; overflow:hidden; }
             .pnl-color-opacity-checker { position:absolute; inset:0; background-image:linear-gradient(45deg,#444 25%,transparent 25%),linear-gradient(-45deg,#444 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#444 75%),linear-gradient(-45deg,transparent 75%,#444 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; }
@@ -146,37 +147,37 @@
             .pnl-opacity-num { font-size:10px; color:var(--accent); width:32px; text-align:right; background:transparent; border:none; outline:none; font-family:inherit; cursor:ew-resize; }
             .pnl-opacity-num:focus { cursor:text; border-bottom:1px solid var(--accent); }
 
-            /* RGB fields */
+            
             .pnl-rgb-row-inner { display:flex; gap:4px; }
             .pnl-rgb-field { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; }
             .pnl-rgb-lbl  { font-size:8px; color:#555; text-transform:uppercase; }
             .pnl-rgb-inp  { width:100%; background:#2a2a2f; border:1px solid #3a3a40; color:var(--accent); font-size:10px; font-family:inherit; text-align:center; padding:2px 3px; outline:none; border-radius:2px; }
             .pnl-rgb-inp:focus { border-color:var(--accent); }
 
-            /* ── Select ─────────────────────────────────────────── */
+            
             .pnl-select { flex:1; min-width:0; background:#2a2a2f; border:1px solid #3a3a40; color:#c8c8d0; font-size:10px; font-family:inherit; padding:3px 20px 3px 7px; cursor:pointer; outline:none; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0l3.5 4L7 0z' fill='%23666'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 7px center; border-radius:2px; }
             .pnl-select:focus { border-color:var(--accent); }
 
-            /* ── Text ───────────────────────────────────────────── */
+            
             .pnl-text-input { flex:1; min-width:0; background:#2a2a2f; border:1px solid #3a3a40; color:var(--accent); font-size:10px; font-family:inherit; padding:3px 7px; outline:none; border-radius:2px; }
             .pnl-text-input:focus { border-color:var(--accent); }
 
-            /* ── Stepper ────────────────────────────────────────── */
+            
             .pnl-stepper { display:flex; align-items:center; gap:4px; flex:1; justify-content:flex-end; }
             .pnl-stepper-btn { width:16px; height:16px; border-radius:2px; background:#2a2a2f; border:1px solid #3a3a40; color:#888; font-size:14px; line-height:1; cursor:pointer; user-select:none; display:flex; align-items:center; justify-content:center; transition:border-color .1s,color .1s; flex-shrink:0; }
             .pnl-stepper-btn:hover { border-color:var(--accent); color:var(--accent); }
             .pnl-stepper-val { font-size:10px; color:var(--accent); min-width:40px; text-align:right; }
 
-            /* ── Button ─────────────────────────────────────────── */
+            
             .pnl-action-btn { display:block; width:calc(100% - 16px); margin:5px 8px; padding:6px 10px; background:#2a2a2f; border:1px solid #3a3a40; color:#c8c8d0; font-size:10px; font-family:inherit; font-weight:600; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; text-align:center; border-radius:2px; transition:border-color .15s,color .15s,background .15s; }
             .pnl-action-btn:hover { border-color:var(--accent); color:var(--accent); background:#1f1f25; }
             .pnl-action-btn:active { opacity:.6; }
 
-            /* ── Link / popup ───────────────────────────────────── */
+            
             .pnl-link, .pnl-popup-tag { display:block; width:calc(100% - 16px); margin:5px 8px; padding:6px 10px; background:#252528; border:1px solid #3a3a40; color:#888; font-size:10px; font-family:inherit; cursor:pointer; text-align:center; border-radius:2px; transition:color .15s,border-color .15s; }
             .pnl-link:hover, .pnl-popup-tag:hover { color:var(--accent); border-color:var(--accent); }
 
-            /* ── Folder ─────────────────────────────────────────── */
+            
             .pnl-folder { border-bottom:1px solid #28282d; }
             .f-head { display:flex; align-items:center; justify-content:space-between; padding:0 8px 0 10px; height:26px; background:#1a1a1d; cursor:pointer; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#666; border-bottom:1px solid #28282d; user-select:none; transition:color .1s; }
             .f-head:hover { color:#aaa; }
@@ -184,7 +185,7 @@
             .f-body { display:none; border-left:2px solid var(--accent); }
             .f-body.is-open { display:block; }
 
-            /* ── Tabs ───────────────────────────────────────────── */
+            
             .pnl-tab-bar { display:flex; background:#17171a; border-bottom:1px solid #2e2e33; }
             .pnl-tab { flex:1; padding:6px 4px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; color:#444; text-align:center; border-bottom:2px solid transparent; transition:color .12s,border-color .12s; user-select:none; }
             .pnl-tab:hover { color:#888; }
@@ -197,7 +198,7 @@
             @keyframes tp-left  { from{opacity:0;transform:translateX(10px)} to{opacity:1;transform:none} }
             @keyframes tp-right { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
 
-            /* ── Point2D ────────────────────────────────────────── */
+            
             .pnl-point2d-wrap { padding:6px 8px 7px 10px; border-bottom:1px solid #28282d; }
             .pnl-point2d-top  { display:flex; align-items:center; gap:5px; margin-bottom:5px; }
             .pnl-point2d-lbl  { font-size:10px; color:#888; flex:1; }
@@ -209,30 +210,30 @@
             .pnl-point2d-canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
             .pnl-point2d-handle { position:absolute; width:9px; height:9px; background:var(--accent); border-radius:2px; transform:translate(-50%,-50%); pointer-events:none; box-shadow:0 0 0 1px rgba(0,0,0,.5); }
 
-            /* ── Hard separator ─────────────────────────────────── */
+            
             .pnl-hr { height:1px; background:#2e2e33; margin:0; border:none; }
 
-            /* ── Screw / Rotary knob ────────────────────────────── */
+            
             .pnl-screw-canvas { width:36px; height:36px; cursor:ew-resize; flex-shrink:0; }
 
-            /* ── Checkbox (boolean) ─────────────────────────────── */
+            
             .pnl-checkbox { width:16px; height:16px; border-radius:3px; background:#2a2a2f; border:1px solid #3a3a40; cursor:pointer; position:relative; transition:background .12s,border-color .12s; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
             .pnl-checkbox.on { background:var(--accent); border-color:var(--accent); }
             .pnl-checkbox::after { content:''; display:block; width:9px; height:5px; border-left:1.5px solid transparent; border-bottom:1.5px solid transparent; transform:rotate(-45deg) translate(1px,-1px); transition:border-color .12s; }
             .pnl-checkbox.on::after { border-color:#000; }
 
-            /* ── Segment tabs ───────────────────────────────────── */
+            
             .pnl-seg-bar { display:flex; background:#17171a; border-bottom:1px solid #2e2e33; padding:4px 8px; gap:2px; }
             .pnl-seg { flex:1; padding:4px 4px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; cursor:pointer; color:#555; text-align:center; background:#1a1a1d; border:1px solid #2e2e33; border-radius:2px; transition:color .12s,background .12s,border-color .12s; user-select:none; }
             .pnl-seg:hover { color:#888; }
             .pnl-seg.is-active { color:#111; background:var(--accent); border-color:var(--accent); }
 
-            /* ── Cubic Bezier ───────────────────────────────────── */
+            
             .pnl-bezier-wrap { padding:6px 8px 8px 10px; border-bottom:1px solid #28282d; }
             .pnl-bezier-lbl-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }
             .pnl-bezier-canvas { display:block; width:100%; height:100px; background:#17171a; border:1px solid #2e2e33; cursor:crosshair; }
 
-            /* ── Console log ────────────────────────────────────── */
+            
             .pnl-console-wrap { border-bottom:1px solid #28282d; }
             .pnl-console-head { display:flex; align-items:center; justify-content:space-between; padding:4px 8px 4px 10px; }
             .pnl-console-entries { background:#17171a; max-height:90px; overflow-y:auto; font-size:9px; color:#666; font-family:inherit; }
@@ -241,12 +242,12 @@
             .pnl-console-entry { padding:2px 10px; border-bottom:1px solid #1e1e22; display:flex; justify-content:space-between; }
             .pnl-console-entry .val { color:var(--accent); }
 
-            /* ── Display (readonly value viewer) ────────────────── */
+            
             .pnl-display-wrap { background:#17171a; border-bottom:1px solid #28282d; padding:5px 10px; font-size:10px; }
             .pnl-display-lbl { color:#555; font-size:9px; margin-bottom:3px; }
             .pnl-display-val { color:var(--accent); white-space:pre-wrap; word-break:break-all; line-height:1.5; }
 
-            /* ── Point3D / Point4D ──────────────────────────────── */
+            
             .pnl-pointnd-wrap { padding:5px 8px 6px 10px; border-bottom:1px solid #28282d; }
             .pnl-pointnd-top  { display:flex; align-items:center; gap:4px; margin-bottom:4px; }
             .pnl-pointnd-lbl  { font-size:10px; color:#888; flex:1; }
@@ -254,11 +255,11 @@
             .pnl-pointnd-field{ flex:1; display:flex; flex-direction:column; gap:2px; }
             .pnl-pointnd-axis { font-size:8px; color:#555; text-transform:uppercase; text-align:center; }
 
-            /* ── List (tweakpane-style) ──────────────────────────── */
+            
             .pnl-list { flex:1; min-width:0; background:#2a2a2f; border:1px solid #3a3a40; color:#c8c8d0; font-size:10px; font-family:inherit; padding:3px 20px 3px 7px; cursor:pointer; outline:none; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0l3.5 4L7 0z' fill='%23666'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 7px center; border-radius:2px; }
             .pnl-list:focus { border-color:var(--accent); }
 
-            /* ── Modal ──────────────────────────────────────────── */
+            
             .pnl-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); display:none; align-items:center; justify-content:center; z-index:150000; }
             .pnl-modal { background:#1f1f22; border:1px solid var(--accent); padding:20px; width:300px; font-family:ui-monospace,monospace; }
             .pnl-modal h3 { color:var(--accent); font-size:11px; text-transform:uppercase; margin-bottom:10px; }
@@ -272,7 +273,7 @@
 
         const accent = theme.accent || '#00ff88';
         const bindings = new Map();
-        const changeCallbacks = new Map(); // key → [onChange fns]
+        const changeCallbacks = new Map(); 
         const proxy = new Proxy(state, {
             set(t, p, v) {
                 t[p]=v;
@@ -283,7 +284,7 @@
         });
         window.pnlStates[index] = proxy;
 
-        /* Register an onChange callback for a key */
+        
         const onChange = (key, fn) => {
             if (!changeCallbacks.has(key)) changeCallbacks.set(key,[]);
             changeCallbacks.get(key).push(fn);
@@ -304,7 +305,7 @@
 
         const bind = (key, fn) => { if(!bindings.has(key)) bindings.set(key,[]); bindings.get(key).push(fn); };
 
-        /* ── Scrub helper (drag left/right = decrease/increase, click = type) ── */
+        
         const makeScrub = (el, getVal, setVal, step, min, max) => {
             const dec = String(step).includes('.') ? String(step).split('.')[1].length : 0;
             const clamp = v => Math.min(max??Infinity, Math.max(min??-Infinity, parseFloat(v.toFixed(dec+4))));
@@ -329,14 +330,14 @@
             el.addEventListener('keydown', e => { if(e.key==='Enter') el.blur(); });
         };
 
-        /* ── Tooltip helper ──────────────────────────────────────────────── */
+        
         const addTip = (el, text) => {
             el.addEventListener('mouseenter', e => { tip.innerText=text; tip.style.visibility='visible'; });
             el.addEventListener('mousemove',  e => { tip.style.left=(e.clientX-200)+'px'; tip.style.top=(e.clientY-8)+'px'; });
             el.addEventListener('mouseleave', () => { tip.style.visibility='hidden'; });
         };
 
-        /* ── Tabs (underline style) or Segments (filled box style) ───────── */
+        
         const addTabs = (item, container) => {
             const isSeg = item.style==='segment';
             const bar=document.createElement('div'); bar.className=isSeg?'pnl-seg-bar':'pnl-tab-bar';
@@ -355,7 +356,7 @@
             container.appendChild(bar); container.appendChild(panels);
         };
 
-        /* ── Color picker ─────────────────────────────────────────────────── */
+        
         const buildColorPicker = (item, container) => {
             const modes     = item.modes || ['number','slider'];
             const hasBox     = modes.includes('box');
@@ -368,13 +369,13 @@
             let opacity = 1.0;
             let hue = 0;
 
-            // ── init hue from starting color ─────────────────────────────
+            
             const {r:ir,g:ig,b:ib}=hexToRgb(currentHex);
             const {h:ih}=rgbToHsl(ir,ig,ib); hue=ih;
 
             const block = document.createElement('div'); block.className='pnl-color-block';
 
-            // ── Head row: label | swatch + hex ────────────────────────────
+            
             const headRow = document.createElement('div'); headRow.className='pnl-color-head-row';
             const rowLbl  = document.createElement('div'); rowLbl.className='pnl-label'; rowLbl.innerText=item.label||item.key;
             if (item.info) { rowLbl.classList.add('has-tip'); addTip(rowLbl, item.info); }
@@ -385,13 +386,13 @@
             headRow.append(rowLbl, inlineWrap);
             block.appendChild(headRow);
 
-            // ── Extras panel (always visible when modes include them) ─────
+            
             let expanderInner, canvas, ctx, boxHandle, hueSlider, swatchLg, opacityRange, opacityNum, opGrad, rInp, gInp, bInp;
 
             if (hasExtras) {
                 expanderInner = document.createElement('div'); expanderInner.className='pnl-color-expander-inner';
 
-                // ── Box picker ────────────────────────────────────────────
+                
                 if (hasBox) {
                     canvas = document.createElement('canvas'); canvas.className='pnl-color-canvas'; canvas.height=80;
                     boxHandle = document.createElement('div');
@@ -416,8 +417,8 @@
                         const sat=(x/w)*100;
                         const lightness=100-(y/h)*50*(1+(1-x/w));
                         const {r:rr,g:gg,b:bb}=hslToRgb(hue,sat,Math.max(0,Math.min(100,lightness)));
-                        updateDOM(rgbToHex(rr,gg,bb)); // DOM only, no proxy write
-                        proxy[item.key]=currentHex;    // single proxy write
+                        updateDOM(rgbToHex(rr,gg,bb)); 
+                        proxy[item.key]=currentHex;    
                     };
                     canvas.addEventListener('mousedown', e=>{
                         drawBox(); pickFromBox(e);
@@ -425,11 +426,11 @@
                         const up=()=>{window.removeEventListener('mousemove',mv);window.removeEventListener('mouseup',up);};
                         window.addEventListener('mousemove',mv); window.addEventListener('mouseup',up);
                     });
-                    // draw once inserted into DOM
+                    
                     requestAnimationFrame(drawBox);
                 }
 
-                // ── Hue slider ────────────────────────────────────────────
+                
                 if (hasSlider) {
                     const hueRow=document.createElement('div'); hueRow.className='pnl-color-hue-row';
                     swatchLg=document.createElement('div'); swatchLg.className='pnl-color-swatch-lg'; swatchLg.style.background=currentHex;
@@ -448,7 +449,7 @@
                     hueRow.append(swatchLg,hueSlider); expanderInner.appendChild(hueRow);
                 }
 
-                // ── Opacity ───────────────────────────────────────────────
+                
                 if (hasOpacity) {
                     const opRow=document.createElement('div'); opRow.className='pnl-color-opacity-row';
                     const track=document.createElement('div'); track.className='pnl-color-opacity-track';
@@ -462,7 +463,7 @@
                     track.append(checker,opGrad,opacityRange); opRow.append(track,opacityNum); expanderInner.appendChild(opRow);
                 }
 
-                // ── RGB ───────────────────────────────────────────────────
+                
                 if (hasRgb) {
                     const {r,g,b}=hexToRgb(currentHex);
                     const rgbEl=document.createElement('div'); rgbEl.className='pnl-rgb-row-inner';
@@ -477,9 +478,9 @@
                 block.appendChild(expanderInner);
             }
 
-            // ── updateDOM: sync all widgets without touching proxy ────────
-            // This is the key fix: separating "update widgets" from "https://esm.sh/write state"
-            // so the proxy binding never re-enters this function
+            
+            
+            
             const updateDOM = hex => {
                 currentHex = hex;
                 swatch.style.background = hex;
@@ -490,7 +491,7 @@
                 if(opGrad) opGrad.style.background=`linear-gradient(to right,transparent,${hex})`;
             };
 
-            // ── Wire hex input ────────────────────────────────────────────
+            
             hexInp.addEventListener('change', e => {
                 const v=e.target.value.trim();
                 if(isHex(v)){ updateDOM(v); proxy[item.key]=currentHex; } else hexInp.value=currentHex;
@@ -499,27 +500,27 @@
                 if(e.key==='Enter'){ const v=hexInp.value.trim(); if(isHex(v)){ updateDOM(v); proxy[item.key]=currentHex; } hexInp.blur(); }
             });
 
-            // ── Bind: external state changes → updateDOM only (no proxy write) ──
+            
             bind(item.key, v => updateDOM(v));
 
             container.appendChild(block);
         };
 
-        /* ── Row renderer ─────────────────────────────────────────────────── */
+        
         const addRow = (item, container) => {
-            // Register onChange callback if declared on the item
+            
             if (item.key && item.onChange) onChange(item.key, item.onChange);
 
             if (item.type==='tabs')   { addTabs(item, container); return; }
             if (item.type==='color')  { buildColorPicker(item, container); return; }
 
-            // ── Separator (hard rule, no label) ──────────────────────────
+            
             if (item.type==='separator') {
                 const hr=document.createElement('hr'); hr.className='pnl-hr';
                 container.appendChild(hr); return;
             }
 
-            // ── Console log ──────────────────────────────────────────────
+            
             if (item.type==='console') {
                 const maxLines = item.rows ?? 5;
                 const lines = [];
@@ -533,7 +534,7 @@
                 clrBtn.onmouseleave=()=>clrBtn.style.color='#555';
                 head.append(lbl,clrBtn); wrap.append(head,entries);
                 container.appendChild(wrap);
-                // expose a .log() method on the element for external use
+                
                 wrap._log = (msg) => {
                     const fmt = typeof msg==='object' ? JSON.stringify(msg) : String(msg);
                     lines.push(fmt);
@@ -545,14 +546,14 @@
                     while(entries.children.length>maxLines) entries.removeChild(entries.firstChild);
                     entries.scrollTop=entries.scrollHeight;
                 };
-                // auto-sample if key is provided
+                
                 if(item.key){
                     bind(item.key, v => wrap._log(typeof v==='number'?v.toFixed(typeof item.step==='number'?String(item.step).split('.')[1]?.length??0:3):JSON.stringify(v)));
                 }
                 return;
             }
 
-            // ── Display (readonly value viewer) ──────────────────────────
+            
             if (item.type==='display') {
                 const wrap=document.createElement('div'); wrap.className='pnl-display-wrap';
                 const lbl=document.createElement('div'); lbl.className='pnl-display-lbl'; lbl.innerText=item.label||item.key||'';
@@ -561,12 +562,12 @@
                 val.innerText=fmt(proxy[item.key]??'—');
                 wrap.append(lbl,val); container.appendChild(wrap);
                 if(item.key) bind(item.key,v=>val.innerText=fmt(v));
-                // re-read after proxy is fully populated (ESM timing)
+                
                 setTimeout(()=>{ val.innerText=fmt(proxy[item.key]??'—'); },0);
                 return;
             }
 
-            // ── Point3D / Point4D ─────────────────────────────────────────
+            
             if (item.type==='point3d'||item.type==='point4d') {
                 const axes = item.type==='point4d' ? ['x','y','z','w'] : ['x','y','z'];
                 const cur  = proxy[item.key] || Object.fromEntries(axes.map(a=>[a,0]));
@@ -640,17 +641,17 @@
                     cv2.width=w; cv2.height=h;
                     const c=cv2.getContext('2d');
                     c.clearRect(0,0,w,h);
-                    // dashed grid lines at center
+                    
                     c.strokeStyle='#2e2e36'; c.lineWidth=1; c.setLineDash([3,3]);
                     c.beginPath(); c.moveTo(w/2,0); c.lineTo(w/2,h); c.stroke();
                     c.beginPath(); c.moveTo(0,h/2); c.lineTo(w,h/2); c.stroke();
                     c.setLineDash([]);
-                    // dotted line from center to handle
+                    
                     const px=hx/100*w, py=hy/100*h;
                     c.strokeStyle='rgba(200,200,210,0.35)'; c.lineWidth=1; c.setLineDash([2,3]);
                     c.beginPath(); c.moveTo(w/2,h/2); c.lineTo(px,py); c.stroke();
                     c.setLineDash([]);
-                    // center dot
+                    
                     c.fillStyle='#444'; c.beginPath(); c.arc(w/2,h/2,2,0,Math.PI*2); c.fill();
                 };
 
@@ -678,13 +679,13 @@
                 top.append(lbl,xLbl,xInp,yLbl,yInp); wrap.appendChild(top); wrap.appendChild(pad); container.appendChild(wrap); return;
             }
 
-            // ── Screw / rotary knob ──────────────────────────────────────
+            
             if (item.type==='screw') {
                 const min=item.min??0, max=item.max??1, step=item.step||0.01;
                 const dec=String(step).includes('.')?String(step).split('.')[1].length:0;
                 const fmt=v=>dec>0?Number(v).toFixed(dec):String(Math.round(v));
                 const clamp=v=>Math.min(max,Math.max(min,v));
-                const valToAngle=v=>((v-min)/(max-min))*300-150; // -150° to +150°
+                const valToAngle=v=>((v-min)/(max-min))*300-150; 
 
                 const row=document.createElement('div'); row.className='pnl-row';
                 const lbl=document.createElement('div'); lbl.className='pnl-label'; lbl.innerText=item.label||item.key;
@@ -697,10 +698,10 @@
                 const drawScrew=v=>{
                     const c=cv3.getContext('2d'); c.clearRect(0,0,36,36);
                     const cx=18,cy=18;
-                    // subtle circle background
+                    
                     c.strokeStyle='#2e2e33'; c.lineWidth=1.5;
                     c.beginPath(); c.arc(cx,cy,13,0,Math.PI*2); c.stroke();
-                    // two bars rotated by angle
+                    
                     const ang=valToAngle(v)*Math.PI/180;
                     c.save(); c.translate(cx,cy); c.rotate(ang);
                     c.fillStyle=accent;
@@ -716,9 +717,9 @@
                 ctrls.append(cv3,num); row.append(lbl,ctrls); container.appendChild(row); return;
             }
 
-            // ── Cubic Bezier editor ──────────────────────────────────────
+            
             if (item.type==='bezier') {
-                // value: [x1,y1,x2,y2]  control points of cubic-bezier(x1,y1,x2,y2)
+                
                 const def=proxy[item.key]||[0.25,0.1,0.25,1.0];
                 let [x1,y1,x2,y2]=def;
                 const wrap=document.createElement('div'); wrap.className='pnl-bezier-wrap';
@@ -740,19 +741,19 @@
                     const tx=v=>PAD+v*(W-PAD*2);
                     const ty=v=>H-PAD-v*(H-PAD*2);
                     const cp1x=tx(x1),cp1y=ty(y1),cp2x=tx(x2),cp2y=ty(y2);
-                    // grid
+                    
                     c.strokeStyle='#2a2a2f'; c.lineWidth=1; c.setLineDash([2,3]);
                     c.beginPath(); c.moveTo(tx(0),ty(0)); c.lineTo(tx(1),ty(1)); c.stroke();
                     c.setLineDash([]);
-                    // control arm lines
+                    
                     c.strokeStyle='#444'; c.lineWidth=1;
                     c.beginPath(); c.moveTo(tx(0),ty(0)); c.lineTo(cp1x,cp1y); c.stroke();
                     c.beginPath(); c.moveTo(tx(1),ty(1)); c.lineTo(cp2x,cp2y); c.stroke();
-                    // curve
+                    
                     c.strokeStyle=accent; c.lineWidth=1.5;
                     c.beginPath(); c.moveTo(tx(0),ty(0));
                     c.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,tx(1),ty(1)); c.stroke();
-                    // handles
+                    
                     [[cp1x,cp1y],[cp2x,cp2y]].forEach(([hx,hy])=>{
                         c.fillStyle='#c8c8d0'; c.strokeStyle='#444'; c.lineWidth=1;
                         c.beginPath(); c.arc(hx,hy,4,0,Math.PI*2); c.fill(); c.stroke();
@@ -783,7 +784,7 @@
                 container.appendChild(wrap); return;
             }
 
-            // ── Slider (full-width) ──────────────────────────────────────
+            
             if (item.type==='slider') {
                 const step=item.step||1;
                 const dec=String(step).includes('.')?String(step).split('.')[1].length:0;
@@ -811,7 +812,7 @@
                 block.append(topRow,trackWrap); container.appendChild(block); return;
             }
 
-            // ── Standard two-column rows ─────────────────────────────────
+            
             const row=document.createElement('div'); row.className='pnl-row';
             const lbl=document.createElement('div'); lbl.className='pnl-label'; lbl.innerText=item.label||item.key;
             const ctrls=document.createElement('div'); ctrls.className='pnl-ctrls';
@@ -831,7 +832,7 @@
                 sel.onchange=e=>proxy[item.key]=e.target.value;
                 bind(item.key,v=>sel.value=v); ctrls.appendChild(sel);
             } else if (item.type==='list') {
-                // tweakpane-style: options is [{text:'Label', value: any}, ...]
+                
                 const sel=document.createElement('select'); sel.className='pnl-list';
                 const opts = Array.isArray(item.options)
                     ? item.options
@@ -864,7 +865,7 @@
 
         layout.forEach(item => addRow(item, win.querySelector('.pnl-body')));
 
-        // flush all bindings once after build so display/bezier/console show initial values
+        
         setTimeout(() => {
             bindings.forEach((fns, key) => {
                 if (state[key] !== undefined) fns.forEach(fn => fn(state[key]));
@@ -876,7 +877,7 @@
             const body = win.querySelector('.pnl-body');
             const minimizing = !win.classList.contains('is-minimized');
             if (minimizing) {
-                // lock current height before collapsing
+                
                 body.style.maxHeight = body.scrollHeight + 'px';
                 requestAnimationFrame(() => {
                     win.classList.add('is-minimized');
@@ -893,9 +894,9 @@
         setTimeout(updateStack, 50);
     };
 
-    /* ── Config normalizer: supports new {ui, controls} format ─────────── */
+    
     const normalize = cfg => {
-        if (!cfg.ui && !cfg.controls) return cfg; // old format, pass through
+        if (!cfg.ui && !cfg.controls) return cfg; 
         const out = Object.assign({}, cfg);
         if (cfg.ui) {
             out.title     = cfg.ui.title     ?? out.title ?? 'Panel';
