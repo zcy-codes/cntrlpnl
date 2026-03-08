@@ -941,37 +941,93 @@ pre::before {
   <div class="page-hero">
     <div class="page-eyebrow">getting started</div>
     <h1 class="page-title">Installation</h1>
-    <p class="page-desc">cntrlPNL has no dependencies and no build step. Getting it running takes about 30 seconds.</p>
+    <p class="page-desc">cntrlPNL has no dependencies and no build step. Pick whichever method fits your project.</p>
   </div>
 
   <div class="doc-section" id="s-script">
-    <h2>CDN (recommended)</h2>
-    <p>The easiest way — no download, no npm, no setup. Just drop this script tag into your HTML:</p>
-    <pre data-lang="html"><div class="code-inner"><span class="str">&lt;script src="https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.js"&gt;&lt;/script&gt;</span></div></pre>
-    <p>Served by <a href="https://www.jsdelivr.com" target="_blank">jsDelivr</a> — a fast, reliable public CDN with global edge caching. The file is pulled straight from the GitHub repo, so it's always up to date with the latest version on <code>main</code>.</p>
-    <p>Place the tag anywhere in <code>&lt;head&gt;</code> or before your closing <code>&lt;body&gt;</code> tag. The library wraps itself in an IIFE so it won't pollute your global scope beyond <code>window.pnlStates</code> and reading <code>window.pnlConfigs</code>.</p>
+    <h2>Script tag</h2>
+    <p>Add one line to your HTML — no download, no npm, no build step. Then set <code>window.pnlConfigs</code> and cntrlPNL picks it up automatically:</p>
+    <pre data-lang="html"><div class="code-inner"><span class="str">&lt;!DOCTYPE html&gt;</span>
+<span class="str">&lt;html&gt;</span>
+<span class="str">&lt;body&gt;</span>
+  <span class="str">&lt;script src="https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.js"&gt;&lt;/script&gt;</span>
+  <span class="str">&lt;script&gt;</span>
+    <span class="key">window</span>.pnlConfigs = [{
+      <span class="key">ui</span>: { <span class="key">title</span>: <span class="str">'scene'</span>, <span class="key">accent</span>: <span class="str">'#00ff88'</span> },
+      <span class="key">controls</span>: [
+        { <span class="key">type</span>: <span class="str">'slider'</span>, <span class="key">key</span>: <span class="str">'speed'</span>,  <span class="key">default</span>: <span class="num">50</span>,    <span class="key">min</span>: <span class="num">0</span>, <span class="key">max</span>: <span class="num">100</span> },
+        { <span class="key">type</span>: <span class="str">'toggle'</span>, <span class="key">key</span>: <span class="str">'paused'</span>, <span class="key">default</span>: <span class="kw">false</span> },
+      ]
+    }]
+
+    <span class="cmt">// state is at window.pnlStates[0] after DOMContentLoaded</span>
+  <span class="str">&lt;/script&gt;</span>
+<span class="str">&lt;/body&gt;</span>
+<span class="str">&lt;/html&gt;</span></div></pre>
+  </div>
+
+  <div class="doc-section" id="s-esm">
+    <h2>ES Module (recommended)</h2>
+    <p>Use <code>import</code> syntax with <code>&lt;script type="module"&gt;</code>. Everything lives in one block — no separate files needed:</p>
+    <pre data-lang="html"><div class="code-inner"><span class="str">&lt;!DOCTYPE html&gt;</span>
+<span class="str">&lt;html&gt;</span>
+<span class="str">&lt;body&gt;</span>
+  <span class="str">&lt;canvas id="c"&gt;&lt;/canvas&gt;</span>
+
+  <span class="str">&lt;script type="module"&gt;</span>
+    <span class="kw">import</span> { <span class="fn">cntrlPNL</span> } <span class="kw">from</span> <span class="str">'https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.esm.js'</span>
+
+    <span class="kw">const</span> state = <span class="fn">cntrlPNL</span>({
+      <span class="key">ui</span>: { <span class="key">title</span>: <span class="str">'scene'</span>, <span class="key">accent</span>: <span class="str">'#00ff88'</span> },
+      <span class="key">controls</span>: [
+        { <span class="key">type</span>: <span class="str">'slider'</span>, <span class="key">key</span>: <span class="str">'speed'</span>,  <span class="key">default</span>: <span class="num">50</span>,    <span class="key">min</span>: <span class="num">0</span>, <span class="key">max</span>: <span class="num">100</span> },
+        { <span class="key">type</span>: <span class="str">'toggle'</span>, <span class="key">key</span>: <span class="str">'paused'</span>, <span class="key">default</span>: <span class="kw">false</span> },
+        { <span class="key">type</span>: <span class="str">'color'</span>,  <span class="key">key</span>: <span class="str">'tint'</span>,   <span class="key">default</span>: <span class="str">'#00ff88'</span>, <span class="key">modes</span>: [<span class="str">'slider'</span>] },
+      ]
+    })
+
+    <span class="cmt">// use state directly in your render loop</span>
+    <span class="kw">function</span> <span class="fn">draw</span>() {
+      <span class="fn">requestAnimationFrame</span>(draw)
+      <span class="kw">if</span> (state.paused) <span class="kw">return</span>
+      <span class="cmt">// state.speed, state.tint, etc.</span>
+    }
+    <span class="fn">draw</span>()
+  <span class="str">&lt;/script&gt;</span>
+<span class="str">&lt;/body&gt;</span>
+<span class="str">&lt;/html&gt;</span></div></pre>
+
     <div class="callout">
-      <p><strong>Order doesn't matter.</strong> Set <code>window.pnlConfigs</code> before or after the script tag — cntrlPNL waits for <code>DOMContentLoaded</code> before initialising, so either order works.</p>
+      <p><strong>That's the only real difference from the script tag version.</strong> <code>cntrlPNL()</code> returns state directly instead of stashing it on <code>window.pnlStates</code>. The config format, all control types, and writing to state are all identical.</p>
     </div>
+
+    <p>Both named and default exports work:</p>
+    <pre data-lang="js"><div class="code-inner"><span class="kw">import</span> { <span class="fn">cntrlPNL</span> } <span class="kw">from</span> <span class="str">'...'</span>  <span class="cmt">// named export</span>
+<span class="kw">import</span>   <span class="fn">cntrlPNL</span>   <span class="kw">from</span> <span class="str">'...'</span>  <span class="cmt">// default export</span></div></pre>
   </div>
 
   <div class="doc-section" id="s-cdn">
     <h2>Self-hosted</h2>
-    <p>If you'd rather serve the file yourself, download it directly from GitHub and add it to your project:</p>
-    <pre data-lang="html"><div class="code-inner"><span class="str">&lt;script src="cntrlPNL.js"&gt;&lt;/script&gt;</span></div></pre>
-    <p>Grab the file from <a href="https://github.com/zcy-codes/cntrlpnl/blob/main/cntrlPNL.js" target="_blank">github.com/zcy-codes/cntrlpnl</a> — click the file, then the download icon in the top right.</p>
+    <p>Download either file from <a href="https://github.com/zcy-codes/cntrlpnl" target="_blank">github.com/zcy-codes/cntrlpnl</a> and serve it yourself:</p>
+    <pre data-lang="html"><div class="code-inner"><span class="cmt">&lt;!-- script tag version --&gt;</span>
+<span class="str">&lt;script src="./cntrlPNL.js"&gt;&lt;/script&gt;</span>
+
+<span class="cmt">&lt;!-- ESM version --&gt;</span>
+<span class="str">&lt;script type="module"&gt;</span>
+  <span class="kw">import</span> { <span class="fn">cntrlPNL</span> } <span class="kw">from</span> <span class="str">'./cntrlPNL.esm.js'</span>
+<span class="str">&lt;/script&gt;</span></div></pre>
     <div class="callout warn">
-      <p><strong>Don't use raw.githubusercontent.com.</strong> Raw GitHub URLs are rate limited and not suitable for production. Use the jsDelivr CDN link above or self-host the file instead.</p>
+      <p><strong>Don't use raw.githubusercontent.com.</strong> Raw GitHub URLs are rate limited. Use jsDelivr or self-host instead.</p>
     </div>
   </div>
 
   <div class="doc-section" id="s-verify">
     <h2>Verify it's working</h2>
-    <p>After including the script tag, paste this in your browser console to confirm the library loaded:</p>
+    <p>Using the script tag version? Paste this in your browser console to confirm it loaded:</p>
     <pre data-lang="js"><div class="code-inner"><span class="key">window</span>.pnlConfigs = [{ <span class="key">ui</span>: { <span class="key">title</span>: <span class="str">'test'</span> }, <span class="key">controls</span>: [
   { <span class="key">type</span>: <span class="str">'slider'</span>, <span class="key">key</span>: <span class="str">'x'</span>, <span class="key">default</span>: <span class="num">50</span> }
 ]}];</div></pre>
-    <p>You should see a small panel appear in the top-right corner of the page. If nothing appears, check that <code>cntrlPNL.js</code> is loading correctly in the Network tab of your browser devtools.</p>
+    <p>You should see a panel appear in the top-right corner. If nothing shows up, check the Network tab in devtools to confirm the script loaded correctly.</p>
   </div>
 
 </div>
@@ -1946,7 +2002,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
 
 const PAGES = {
   overview:  { name: 'Overview',        subnav: ['what', 'when'] },
-  install:   { name: 'Installation',    subnav: ['script', 'cdn', 'verify'] },
+  install:   { name: 'Installation',    subnav: ['script', 'esm', 'cdn', 'verify'] },
   quickstart:{ name: 'Quickstart',      subnav: ['first-panel', 'reading-state', 'writing-state', 'render-loop', 'next-steps'] },
   controls:  { name: 'Controls',        subnav: ['controls-index','slider','toggle','color','select','stepper','inputtext','point2d','layout'] },
   guide:     { name: 'State',           subnav: ['proxy', 'multiple', 'render', 'init-timing'] },
@@ -1958,7 +2014,7 @@ const PAGES = {
 
 const SUBNAV_LABELS = {
   'what': 'What is it', 'when': 'When to use',
-  'script': 'Script tag', 'cdn': 'CDN', 'verify': 'Verify',
+  'script': 'Script tag', 'esm': 'ES Module', 'cdn': 'Self-hosted', 'verify': 'Verify',
   'first-panel': 'First panel', 'reading-state': 'Reading state', 'writing-state': 'Writing state',
   'render-loop': 'Render loop', 'next-steps': 'Next steps',
   'controls-index': 'All controls', 'slider': 'slider', 'toggle': 'toggle',
