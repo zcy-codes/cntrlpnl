@@ -1,4 +1,4 @@
-# cntrlpnl
+# cntrlPNL
 
 Floating debug panels for the browser. Drop in the script, write a config object, done — no build tools, no npm, no framework.
 
@@ -8,8 +8,10 @@ Floating debug panels for the browser. Drop in the script, write a config object
 
 ## Install
 
+**Script tag**
+
 ```html
-<script src="cntrlpnl.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.js"></script>
 ```
 
 Set `window.pnlConfigs` before or after load — either works:
@@ -20,12 +22,24 @@ Set `window.pnlConfigs` before or after load — either works:
 </script>
 ```
 
+**ES Module**
+
+```html
+<script type="module">
+  import { cntrlPNL } from 'https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.esm.js'
+
+  const state = cntrlPNL({ ui: { title: 'dev' }, controls: [] })
+</script>
+```
+
+That's the only real difference between the two — `state` is returned directly instead of being stashed on `window.pnlStates`. The config format, all control types, and writing to state are identical.
+
 ---
 
 ## Quickstart
 
 ```html
-<script src="cntrlpnl.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.js"></script>
 <script>
   window.pnlConfigs = [
     {
@@ -236,7 +250,7 @@ Collapsible group.
 {
   type: 'popup', label: 'about',
   config: {
-    title: 'cntrlpnl', text: 'v2',
+    title: 'cntrlPNL', text: 'v2',
     buttons: [{ label: 'close', action: 'close' }]
   }
 }
@@ -250,8 +264,8 @@ Panels stack and reflow automatically.
 
 ```js
 window.pnlConfigs = [
-  { ui: { title: 'scene',   accent: '#00ff88' },                 controls: [...] },
-  { ui: { title: 'post fx', accent: '#ff6600', collapsed: true }, controls: [...] },
+  { ui: { title: 'scene',   accent: '#00ff88' },                  controls: [...] },
+  { ui: { title: 'post fx', accent: '#ff6600', collapsed: true },  controls: [...] },
 ];
 
 window.pnlStates[0].speed = 10;
@@ -279,9 +293,11 @@ ui: { accent: '#00d4ff' }
 <html>
 <body>
 <canvas id="c" width="800" height="600"></canvas>
-<script src="cntrlpnl.js"></script>
-<script>
-  window.pnlConfigs = [{
+
+<script type="module">
+  import { cntrlPNL } from 'https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.esm.js'
+
+  const state = cntrlPNL({
     ui: { title: 'renderer', accent: '#00ff88', closeKey: 'h' },
     controls: [
       { type: 'text',    label: 'scene' },
@@ -299,16 +315,15 @@ ui: { accent: '#00d4ff' }
       },
       { type: 'button', label: 'reset', onClick: s => { s.zoom = 1; s.pan = { x: 0, y: 0 }; } }
     ]
-  }];
+  })
 
   function render() {
-    const s = window.pnlStates?.[0];
-    if (!s?.paused) {
+    if (!state.paused) {
       // your draw code
     }
-    requestAnimationFrame(render);
+    requestAnimationFrame(render)
   }
-  render();
+  render()
 </script>
 </body>
 </html>
