@@ -1,4 +1,4 @@
-//cntrlPNL ESM v3.5
+//cntrlPNL ESM v3.5 by zach
 window.pnlStates = window.pnlStates || [];
 
     /* ─── Global tooltip ──────────────────────────────────────────────── */
