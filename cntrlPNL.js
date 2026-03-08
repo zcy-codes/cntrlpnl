@@ -71,7 +71,7 @@
             .pnl-ctrls { display:flex; align-items:center; gap:5px; min-width:0; justify-content:flex-end; }
 
             /* ── Separator ──────────────────────────────────────── */
-            .pnl-sep { padding:4px 8px 4px 10px; min-height:22px; display:flex; align-items:center; background:#1a1a1d; border-bottom:1px solid #2e2e33; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#555; }
+            .pnl-sep { padding:4px 8px 4px 10px; min-height:22px; display:flex; align-items:center; justify-content:center; background:#1a1a1d; border-bottom:1px solid #2e2e33; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.12em; color:#666; }
 
             /* ── Slider ─────────────────────────────────────────── */
             .pnl-slider-row { padding:5px 8px 6px 10px; border-bottom:1px solid #28282d; }
@@ -561,6 +561,8 @@
                 val.innerText=fmt(proxy[item.key]??'—');
                 wrap.append(lbl,val); container.appendChild(wrap);
                 if(item.key) bind(item.key,v=>val.innerText=fmt(v));
+                // re-read after proxy is fully populated (ESM timing)
+                setTimeout(()=>{ val.innerText=fmt(proxy[item.key]??'—'); },0);
                 return;
             }
 
@@ -861,6 +863,13 @@
         };
 
         layout.forEach(item => addRow(item, win.querySelector('.pnl-body')));
+
+        // flush all bindings once after build so display/bezier/console show initial values
+        setTimeout(() => {
+            bindings.forEach((fns, key) => {
+                if (state[key] !== undefined) fns.forEach(fn => fn(state[key]));
+            });
+        }, 0);
 
         const updateStack = () => { let o=20; document.querySelectorAll('.pnl-main').forEach(p=>{ p.style.top=o+'px'; o+=p.offsetHeight+8; }); };
         const toggle = () => {
