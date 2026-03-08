@@ -1,0 +1,13 @@
+title: cntrlpnl
+description: Floating debug panels for the browser.
+theme: just-the-docs
+
+url: https://zcy-codes.github.io
+baseurl: /cntrlpnl
+
+aux_links:
+  GitHub: https://github.com/zcy-codes/cntrlpnl
+
+color_scheme: dark
+
+search_enabled: true
