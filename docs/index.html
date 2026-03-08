@@ -782,7 +782,7 @@ pre::before {
   <div class="sidebar-top">
     <div class="logo" onclick="showPage('overview')">
       <span class="logo-word">cntrlPNL</span>
-      <span class="logo-version">v3.1</span>
+      <span class="logo-version">v3.5</span>
     </div>
     <div class="sidebar-search">
       <input type="text" placeholder="search docs..." id="search-input" oninput="handleSearch(this.value)">
@@ -2035,6 +2035,29 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
     <p class="page-desc">Version history and migration notes.</p>
   </div>
 
+  <div class="doc-section" id="s-v3-5">
+    <h2>v3.5</h2>
+    <p>Visual overhaul — Geist Mono font, refined dark theme, and a polish pass across all controls.</p>
+
+    <h3>What's new</h3>
+    <ul style="margin: 10px 0 18px 20px; font-family: var(--font-sans); font-size: 13.5px; line-height: 2.1; color: var(--text);">
+      <li><strong style="color:var(--text-bright)">Geist Mono font</strong> — loaded via Google Fonts with a full weight range (300–700), falling back to <code>ui-monospace</code>, SF Mono, Cascadia Code</li>
+      <li><strong style="color:var(--text-bright)">Refined dark theme</strong> — panel background updated to <code>#1e1e1e</code> with layered box shadows, <code>border-radius: 4px</code>, and more legible <code>#999</code> labels</li>
+      <li><strong style="color:var(--text-bright)">Polished inputs</strong> — all inputs, selects, and buttons now have a recessed look: <code>#1a1a1a</code> fill, visible borders, consistent <code>border-radius: 3px</code>, and hover/focus states</li>
+      <li><strong style="color:var(--text-bright)">Slider redesign</strong> — 3px rounded track with an accent-colored fill div showing progress; thumb is a clean light grey circle with no glow</li>
+      <li><strong style="color:var(--text-bright)">Toggle &amp; checkbox polish</strong> — toggle is larger (32×16px), thumb turns white when on; checkbox uses a CSS checkmark via <code>::after</code></li>
+      <li><strong style="color:var(--text-bright)">Folder animation</strong> — folders now animate open/close using <code>grid-template-rows: 0fr → 1fr</code> instead of snapping</li>
+      <li><strong style="color:var(--text-bright)">Scrollbar refinement</strong> — 4px scrollbar with rounded thumb and hover state across panel body and console entries</li>
+      <li><strong style="color:var(--text-bright)">Modal backdrop blur</strong> — popup modals now use <code>backdrop-filter: blur(8px)</code> with a rounded border</li>
+      <li><strong style="color:var(--text-bright)">Live accent on screw canvas</strong> — screw knob reads <code>--accent</code> from the DOM at draw time, so live accent changes are reflected immediately</li>
+      <li><strong style="color:var(--text-bright)">Tooltip font fix</strong> — global tooltip now uses Geist Mono instead of the generic <code>monospace</code> stack</li>
+      <li><strong style="color:var(--text-bright)">Firefox slider fix</strong> — added <code>::-moz-range-track { background: transparent }</code> so the accent fill is visible in Firefox</li>
+    </ul>
+
+    <h3>No migration needed</h3>
+    <p>Pure visual update — no API changes, no class name changes, no config format changes. Drop-in replacement for v3.1.</p>
+  </div>
+
   <div class="doc-section" id="s-v3-1">
     <h2>v3.1</h2>
     <p>ESM improvements, CDN fix, and polish.</p>
@@ -3152,7 +3175,7 @@ const PAGES = {
   theming:   { name: 'Theming',         subnav: ['accent', 'collapse', 'multi-accent'] },
   config:    { name: 'Config reference',subnav: ['new-format', 'legacy-format', 'ui-options'] },
   examples:  { name: 'Examples',        subnav: ['webgl', 'canvas2d', 'multi-example'] },
-  changelog: { name: 'Changelog',       subnav: ['v3-1', 'v3', 'v2'] },
+  changelog: { name: 'Changelog',       subnav: ['v3-5', 'v3-1', 'v3', 'v2'] },
 };
 
 const SUBNAV_LABELS = {
@@ -3170,7 +3193,7 @@ const SUBNAV_LABELS = {
   'accent': 'Accent color', 'collapse': 'Keyboard toggle', 'multi-accent': 'Per-panel colors',
   'new-format': 'New format', 'legacy-format': 'Legacy format', 'ui-options': 'ui options',
   'webgl': 'WebGL / Three.js', 'canvas2d': 'Canvas 2D', 'multi-example': 'Multi-panel',
-  'v3-1': 'v3.1', 'v3': 'v3.0', 'v2': 'v2.0',
+  'v3-5': 'v3.5', 'v3-1': 'v3.1', 'v3': 'v3.0', 'v2': 'v2.0',
 };
 
 let currentPage = 'overview';
