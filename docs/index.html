@@ -1866,8 +1866,39 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
 ];</div></pre>
   </div>
 
-</div>
-</div>
+  <div class="doc-section" id="s-theme-tokens">
+    <h2>Theme tokens</h2>
+    <p>For deeper customisation, pass a <code>theme</code> object inside <code>ui</code>. All keys are optional — any omitted key falls back to the default dark values.</p>
+    <pre data-lang="js"><div class="code-inner"><span class="key">ui</span>: {
+  <span class="key">accent</span>: <span class="str">'#00ff88'</span>,
+  <span class="key">theme</span>: {
+    <span class="key">bg</span>:        <span class="str">'#1e1e1e'</span>,  <span class="cmt">// panel background</span>
+    <span class="key">bgHead</span>:    <span class="str">'#252525'</span>,  <span class="cmt">// header, folder heads, separators</span>
+    <span class="key">bgInput</span>:   <span class="str">'#1a1a1a'</span>,  <span class="cmt">// inputs, selects, canvas backgrounds</span>
+    <span class="key">border</span>:    <span class="str">'#333'</span>,     <span class="cmt">// outer panel border</span>
+    <span class="key">borderRow</span>: <span class="str">'#2a2a2a'</span>,  <span class="cmt">// row dividers, input borders</span>
+    <span class="key">text</span>:      <span class="str">'#b0b0b0'</span>,  <span class="cmt">// body text, control values</span>
+    <span class="key">label</span>:     <span class="str">'#999'</span>,     <span class="cmt">// row labels</span>
+  }
+}</div></pre>
+    <p>Combined with <code>accent</code>, these 7 tokens cover the entire panel surface — backgrounds, borders, text, and highlights.</p>
+
+    <h3>Light theme example</h3>
+    <pre data-lang="js"><div class="code-inner"><span class="key">ui</span>: {
+  <span class="key">accent</span>: <span class="str">'#2563eb'</span>,
+  <span class="key">theme</span>: {
+    <span class="key">bg</span>:        <span class="str">'#f5f5f5'</span>,
+    <span class="key">bgHead</span>:    <span class="str">'#e8e8e8'</span>,
+    <span class="key">bgInput</span>:   <span class="str">'#ffffff'</span>,
+    <span class="key">border</span>:    <span class="str">'#d0d0d0'</span>,
+    <span class="key">borderRow</span>: <span class="str">'#e0e0e0'</span>,
+    <span class="key">text</span>:      <span class="str">'#333333'</span>,
+    <span class="key">label</span>:     <span class="str">'#666666'</span>,
+  }
+}</div></pre>
+  </div>
+
+
 
 <!-- ════════ PAGE: CONFIG ════════ -->
 <div class="page" id="page-config">
@@ -2037,25 +2068,30 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
 
   <div class="doc-section" id="s-v3-5">
     <h2>v3.5</h2>
-    <p>Visual overhaul — Geist Mono font, refined dark theme, and a polish pass across all controls.</p>
+    <p>Visual overhaul and polish pass across the entire panel.</p>
 
-    <h3>What's new</h3>
+    <h3>Changes</h3>
     <ul style="margin: 10px 0 18px 20px; font-family: var(--font-sans); font-size: 13.5px; line-height: 2.1; color: var(--text);">
-      <li><strong style="color:var(--text-bright)">Geist Mono font</strong> — loaded via Google Fonts with a full weight range (300–700), falling back to <code>ui-monospace</code>, SF Mono, Cascadia Code</li>
-      <li><strong style="color:var(--text-bright)">Refined dark theme</strong> — panel background updated to <code>#1e1e1e</code> with layered box shadows, <code>border-radius: 4px</code>, and more legible <code>#999</code> labels</li>
-      <li><strong style="color:var(--text-bright)">Polished inputs</strong> — all inputs, selects, and buttons now have a recessed look: <code>#1a1a1a</code> fill, visible borders, consistent <code>border-radius: 3px</code>, and hover/focus states</li>
-      <li><strong style="color:var(--text-bright)">Slider redesign</strong> — 3px rounded track with an accent-colored fill div showing progress; thumb is a clean light grey circle with no glow</li>
-      <li><strong style="color:var(--text-bright)">Toggle &amp; checkbox polish</strong> — toggle is larger (32×16px), thumb turns white when on; checkbox uses a CSS checkmark via <code>::after</code></li>
-      <li><strong style="color:var(--text-bright)">Folder animation</strong> — folders now animate open/close using <code>grid-template-rows: 0fr → 1fr</code> instead of snapping</li>
-      <li><strong style="color:var(--text-bright)">Scrollbar refinement</strong> — 4px scrollbar with rounded thumb and hover state across panel body and console entries</li>
-      <li><strong style="color:var(--text-bright)">Modal backdrop blur</strong> — popup modals now use <code>backdrop-filter: blur(8px)</code> with a rounded border</li>
-      <li><strong style="color:var(--text-bright)">Live accent on screw canvas</strong> — screw knob reads <code>--accent</code> from the DOM at draw time, so live accent changes are reflected immediately</li>
-      <li><strong style="color:var(--text-bright)">Tooltip font fix</strong> — global tooltip now uses Geist Mono instead of the generic <code>monospace</code> stack</li>
-      <li><strong style="color:var(--text-bright)">Firefox slider fix</strong> — added <code>::-moz-range-track { background: transparent }</code> so the accent fill is visible in Firefox</li>
+      <li><strong style="color:var(--text-bright)">Geist Mono font</strong> — loaded via Google Fonts with full weight range, falling back to SF Mono and Cascadia Code</li>
+      <li><strong style="color:var(--text-bright)">Refined dark theme</strong> — new <code>#1e1e1e</code> base with layered box shadows, <code>border-radius: 4px</code>, and more legible labels</li>
+      <li><strong style="color:var(--text-bright)">CSS variable theming</strong> — <code>ui.theme</code> now accepts tokens: <code>bg</code>, <code>bgHead</code>, <code>bgInput</code>, <code>border</code>, <code>borderRow</code>, <code>text</code>, <code>label</code></li>
+      <li><strong style="color:var(--text-bright)">Polished inputs</strong> — all inputs, selects, and buttons have a recessed look with visible borders and consistent hover/focus states</li>
+      <li><strong style="color:var(--text-bright)">Slider redesign</strong> — 3px rounded track with accent-colored fill showing progress; thumb is a clean light grey circle with no glow</li>
+      <li><strong style="color:var(--text-bright)">Toggle &amp; checkbox polish</strong> — toggle thumb turns white when on; checkbox uses a CSS checkmark</li>
+      <li><strong style="color:var(--text-bright)">SVG chevrons</strong> — collapse and folder icons are now SVG chevrons that rotate via CSS transition</li>
+      <li><strong style="color:var(--text-bright)">Screw knob redesign</strong> — clock-hand indicator replacing the slot bars; ring track drawn in canvas</li>
+      <li><strong style="color:var(--text-bright)">Point2D crosshair handle</strong> — handle drawn directly on canvas instead of a DOM element</li>
+      <li><strong style="color:var(--text-bright)">Separator ruled line</strong> — <code>type: 'text'</code> separators now show a line on either side of the label</li>
+      <li><strong style="color:var(--text-bright)">Console alternating rows</strong> — alternating row backgrounds for easier log scanning</li>
+      <li><strong style="color:var(--text-bright)">Folder animation</strong> — folders animate open/close smoothly via <code>grid-template-rows</code> transition</li>
+      <li><strong style="color:var(--text-bright)">Modal backdrop blur</strong> — popup modals now use <code>backdrop-filter: blur(8px)</code></li>
+      <li><strong style="color:var(--text-bright)">Live accent on canvas controls</strong> — screw knob and bezier editor read <code>--accent</code> from the DOM at draw time</li>
+      <li><strong style="color:var(--text-bright)">Firefox slider fix</strong> — accent fill now visible in Firefox</li>
+      <li><strong style="color:var(--text-bright)">List value coercion fix</strong> — <code>type: 'list'</code> now preserves original option value types instead of coercing to string</li>
     </ul>
 
     <h3>No migration needed</h3>
-    <p>Pure visual update — no API changes, no class name changes, no config format changes. Drop-in replacement for v3.1.</p>
+    <p>Drop-in replacement for v3.1. No API changes.</p>
   </div>
 
   <div class="doc-section" id="s-v3-1">
@@ -2228,7 +2264,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
 
     /* ─── Global tooltip ──────────────────────────────────────────────── */
     const tip = document.createElement('div');
-    tip.style = 'position:fixed;background:#1a1a1e;border:1px solid var(--accent);color:#ccc;padding:6px 10px;font-size:10px;z-index:200000;visibility:hidden;pointer-events:none;max-width:180px;line-height:1.5;font-family:monospace;';
+    tip.style = 'position:fixed;background:#1a1a1e;border:1px solid #555;color:#ccc;padding:6px 10px;font-size:10px;z-index:200000;visibility:hidden;pointer-events:none;max-width:180px;line-height:1.5;font-family:\'Geist Mono\',ui-monospace,monospace;';
     document.body.appendChild(tip);
 
     /* ─── Hex / RGB helpers ───────────────────────────────────────────── */
@@ -2246,172 +2282,258 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
             const s = document.createElement('style');
             s.id = 'pnl-css';
             s.innerHTML = `
-            /* ── Core ──────────────────────────────────────────── */
+            @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap');
+
             .pnl-main {
-                position:fixed; right:20px; width:256px;
-                background:#1f1f22; border:1px solid #2e2e33;
-                font-family:ui-monospace,'SF Mono','Cascadia Code',monospace;
-                font-size:11px; color:#c8c8d0; z-index:10000;
-                box-shadow:0 8px 32px rgba(0,0,0,.6);
+                position:fixed; right:20px; width:260px;
+                background:var(--pnl-bg); border:1px solid var(--pnl-border);
+                font-family:'Geist Mono',ui-monospace,'SF Mono','Cascadia Code',monospace;
+                font-size:11px; color:var(--pnl-text); z-index:10000;
+                border-radius:4px; overflow:hidden;
+                box-shadow:0 2px 6px rgba(0,0,0,.5),0 12px 40px rgba(0,0,0,.6);
             }
-
-            /* ── Panel body: animated open/close ───────────────── */
             .pnl-body {
-                overflow:hidden;
-                max-height:2000px;
-                transition: max-height .35s cubic-bezier(.4,0,.2,1),
-                            opacity   .25s ease;
-                opacity:1;
                 overflow-y:auto; overflow-x:hidden;
+                max-height:2000px; opacity:1;
+                transition:max-height .3s cubic-bezier(.4,0,.2,1),opacity .2s ease;
             }
-            .pnl-body::-webkit-scrollbar { width:3px; }
-            .pnl-body::-webkit-scrollbar-thumb { background:#333; }
-            .pnl-main.is-minimized .pnl-body {
-                max-height:0 !important;
-                opacity:0;
-                pointer-events:none;
-                overflow:hidden;
-            }
+            .pnl-body::-webkit-scrollbar { width:4px; }
+            .pnl-body::-webkit-scrollbar-thumb { background:#444; border-radius:99px; }
+            .pnl-body::-webkit-scrollbar-thumb:hover { background:#555; }
+            .pnl-main.is-minimized .pnl-body { max-height:0!important; opacity:0; pointer-events:none; overflow:hidden; }
 
-            /* ── Header ─────────────────────────────────────────── */
             .pnl-head {
                 display:flex; align-items:center; justify-content:space-between;
-                padding:0 8px 0 10px; height:30px;
-                background:#17171a; border-bottom:1px solid #2e2e33; user-select:none;
+                padding:0 10px 0 12px; height:32px;
+                background:var(--pnl-bg-head); border-bottom:1px solid var(--pnl-border); user-select:none;
             }
-            .pnl-title { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); opacity:.9; }
-            .p-btn { color:#555; cursor:pointer; font-size:11px; padding:4px; transition:color .1s; }
+            .pnl-title { font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); opacity:.85; }
+            .p-btn { color:#555; cursor:pointer; font-size:10px; padding:4px; transition:color .1s; line-height:1; }
             .p-btn:hover { color:var(--accent); }
 
-            /* ── Standard row ───────────────────────────────────── */
             .pnl-row {
-                display:grid; grid-template-columns:72px 1fr;
-                align-items:center; min-height:28px;
-                padding:0 8px 0 10px; gap:6px;
-                border-bottom:1px solid #28282d;
+                display:grid; grid-template-columns:80px 1fr;
+                align-items:center; min-height:32px;
+                padding:0 10px 0 12px; gap:8px;
+                border-bottom:1px solid var(--pnl-border-row);
             }
-            .pnl-label { font-size:10px; color:#888; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:default; }
+            .pnl-label { font-size:10px; color:var(--pnl-label); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:default; letter-spacing:.01em; }
             .pnl-label.has-tip { cursor:help; }
             .pnl-label.has-tip:hover { color:var(--accent); }
             .pnl-ctrls { display:flex; align-items:center; gap:5px; min-width:0; justify-content:flex-end; }
 
-            /* ── Separator ──────────────────────────────────────── */
-            .pnl-sep { padding:4px 8px 4px 10px; min-height:22px; display:flex; align-items:center; background:#1a1a1d; border-bottom:1px solid #2e2e33; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#555; }
+            .pnl-sep {
+                padding:0 12px; min-height:24px; display:flex; align-items:center; gap:8px;
+                background:var(--pnl-bg-head); border-top:1px solid var(--pnl-border); border-bottom:1px solid var(--pnl-border-row);
+                font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:#555;
+            }
+            .pnl-sep::before, .pnl-sep::after { content:''; flex:1; height:1px; background:var(--pnl-border-row); }
 
-            /* ── Slider ─────────────────────────────────────────── */
-            .pnl-slider-row { padding:5px 8px 6px 10px; border-bottom:1px solid #28282d; }
-            .pnl-slider-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }
-            .pnl-slider-track-wrap { position:relative; height:14px; display:flex; align-items:center; }
+            /* ── Slider ── */
+            .pnl-slider-row { padding:6px 10px 7px 12px; border-bottom:1px solid var(--pnl-border-row); }
+            .pnl-slider-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+            .pnl-slider-track-wrap { position:relative; height:16px; display:flex; align-items:center; }
             .pnl-slider-track-wrap input[type=range] {
-                width:100%; height:2px; margin:0;
                 -webkit-appearance:none; appearance:none;
-                background:#333; cursor:pointer; border-radius:0; position:relative; z-index:1;
+                width:100%; height:3px; margin:0; background:var(--pnl-border-row);
+                border-radius:99px; cursor:pointer; position:relative; z-index:1;
+                outline:none;
             }
             .pnl-slider-track-wrap input[type=range]::-webkit-slider-thumb {
-                -webkit-appearance:none; width:10px; height:10px;
-                background:var(--accent); border-radius:2px; cursor:grab;
-                box-shadow:0 0 0 1px rgba(0,0,0,.4);
+                -webkit-appearance:none; width:12px; height:12px;
+                background:#e0e0e0; border-radius:50%; border:none; cursor:grab;
+                box-shadow:0 1px 3px rgba(0,0,0,.6);
             }
+            .pnl-slider-track-wrap input[type=range]:active::-webkit-slider-thumb { cursor:grabbing; }
             .pnl-slider-track-wrap input[type=range]::-moz-range-thumb {
-                width:10px; height:10px; border:none; background:var(--accent); border-radius:2px;
+                width:12px; height:12px; border:none; background:#e0e0e0;
+                border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,.6);
             }
-            .pnl-slider-fill { position:absolute; left:0; height:2px; background:var(--accent); opacity:.25; border-radius:0; pointer-events:none; z-index:0; }
+            .pnl-slider-track-wrap input[type=range]::-moz-range-track {
+                background:transparent; height:3px;
+            }
+            .pnl-slider-fill { position:absolute; left:0; height:3px; background:var(--accent); border-radius:99px; pointer-events:none; z-index:0; opacity:.7; }
 
-            /* ── Numeric input (scrub + type) ───────────────────── */
+            /* ── Number inputs ── */
             .pnl-num {
-                font-size:10px; color:var(--accent); background:transparent;
-                border:none; border-bottom:1px dotted #444; outline:none;
-                font-family:inherit; text-align:right; padding:0 2px; min-width:0;
-                transition: border-color .1s;
+                font-size:10px; color:var(--accent); background:var(--pnl-bg-input);
+                border:1px solid var(--pnl-border-row); border-radius:3px; outline:none;
+                font-family:inherit; text-align:right; padding:3px 6px; min-width:0;
+                transition:border-color .1s;
             }
-            .pnl-num:hover { border-bottom-color:var(--accent); }
-            .pnl-num.wide  { width:50px; cursor:ew-resize; }
-            .pnl-num.wide:focus { cursor:text; border-bottom:1px solid var(--accent); }
-            .pnl-num.narrow{ width:36px; cursor:ew-resize; }
-            .pnl-num.narrow:focus { cursor:text; border-bottom:1px solid var(--accent); }
+            .pnl-num:hover { border-color:#555; }
+            .pnl-num.wide   { width:52px; cursor:ns-resize; }
+            .pnl-num.wide:focus  { cursor:text; border-color:var(--accent); }
+            .pnl-num.narrow { width:38px; cursor:ns-resize; }
+            .pnl-num.narrow:focus { cursor:text; border-color:var(--accent); }
 
-            /* ── Toggle ─────────────────────────────────────────── */
-            .pnl-toggle { width:28px; height:14px; border-radius:7px; background:#333; border:1px solid #444; cursor:pointer; position:relative; transition:background .15s, border-color .15s; flex-shrink:0; }
+            /* ── Toggle ── */
+            .pnl-toggle {
+                width:32px; height:16px; border-radius:99px;
+                background:#303030; border:1px solid #444;
+                cursor:pointer; position:relative; flex-shrink:0;
+                transition:background .15s,border-color .15s;
+            }
             .pnl-toggle.on { background:var(--accent); border-color:var(--accent); }
-            .pnl-toggle::after { content:''; position:absolute; width:10px; height:10px; border-radius:50%; background:#888; top:1px; left:1px; transition:transform .15s, background .15s; }
-            .pnl-toggle.on::after { transform:translateX(14px); background:#000; }
+            .pnl-toggle::after {
+                content:''; position:absolute; width:12px; height:12px;
+                border-radius:50%; background:#888; top:1px; left:1px;
+                transition:transform .15s,background .15s;
+                box-shadow:0 1px 3px rgba(0,0,0,.4);
+            }
+            .pnl-toggle.on::after { transform:translateX(16px); background:#fff; }
 
-            /* ── Color control ──────────────────────────────────── */
-            .pnl-color-block { border-bottom:1px solid #28282d; }
+            /* ── Checkbox ── */
+            .pnl-checkbox {
+                width:16px; height:16px; border-radius:3px;
+                background:var(--pnl-bg-input); border:1px solid var(--pnl-border-row);
+                cursor:pointer; position:relative; flex-shrink:0;
+                transition:background .12s,border-color .12s;
+            }
+            .pnl-checkbox.on { background:var(--accent); border-color:var(--accent); }
+            .pnl-checkbox::after {
+                content:''; position:absolute;
+                left:3px; top:4px;
+                width:8px; height:4px;
+                border-left:1.5px solid transparent;
+                border-bottom:1.5px solid transparent;
+                transform:rotate(-45deg);
+                transition:border-color .12s;
+            }
+            .pnl-checkbox.on::after { border-color:#000; }
 
-            /* inline row: swatch + hex + RGB toggle */
-            .pnl-color-head-row { display:grid; grid-template-columns:72px 1fr; align-items:center; min-height:28px; padding:0 8px 0 10px; gap:6px; }
-            .pnl-color-inline { display:flex; align-items:center; gap:6px; justify-content:flex-end; }
-            .pnl-color-swatch { width:16px; height:16px; border-radius:2px; border:1px solid #444; cursor:pointer; flex-shrink:0; }
-            .pnl-color-hex-inp { flex:1; min-width:0; background:transparent; border:none; border-bottom:1px solid transparent; color:var(--accent); font-size:10px; font-family:inherit; outline:none; text-align:right; cursor:text; }
-            .pnl-color-hex-inp:focus { border-bottom-color:var(--accent); }
-
-            /* always-visible extras panel */
-            .pnl-color-expander-inner { padding:7px 10px 9px; background:#17171a; border-top:1px solid #28282d; display:flex; flex-direction:column; gap:7px; }
-
-            /* gradient box picker */
-            .pnl-color-canvas { width:100%; height:80px; cursor:crosshair; border-radius:2px; display:block; }
-            .pnl-color-hue-row { display:flex; align-items:center; gap:6px; }
+            /* ── Color picker ── */
+            .pnl-color-block { border-bottom:1px solid var(--pnl-border-row); }
+            .pnl-color-head-row { display:grid; grid-template-columns:80px 1fr; align-items:center; min-height:32px; padding:0 10px 0 12px; gap:8px; overflow:hidden; }
+            .pnl-color-inline { display:flex; align-items:center; gap:6px; justify-content:flex-end; min-width:0; overflow:hidden; }
+            .pnl-color-swatch { width:16px; height:16px; border-radius:3px; border:none; box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,255,255,.04); flex-shrink:0; }
+            .pnl-color-hex-inp {
+                flex:1; min-width:0; width:0; background:var(--pnl-bg-input); border:1px solid var(--pnl-border-row); border-radius:3px;
+                color:var(--accent); font-size:10px; font-family:inherit; outline:none;
+                text-align:right; padding:3px 6px; cursor:text; transition:border-color .1s;
+            }
+            .pnl-color-hex-inp:hover { border-color:#555; }
+            .pnl-color-hex-inp:focus { border-color:var(--accent); }
+            .pnl-color-expander-inner { padding:8px 10px 10px; background:var(--pnl-bg-input); border-top:1px solid var(--pnl-border-row); display:flex; flex-direction:column; gap:8px; }
+            .pnl-color-canvas { width:100%; height:80px; cursor:crosshair; border-radius:3px; display:block; }
+            .pnl-color-hue-row { display:flex; align-items:center; gap:7px; }
             .pnl-color-hue-slider {
-                flex:1; height:8px; border-radius:4px; cursor:pointer; outline:none;
+                flex:1; height:8px; border-radius:99px; cursor:pointer; outline:none;
                 background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);
                 -webkit-appearance:none; appearance:none;
             }
-            .pnl-color-hue-slider::-webkit-slider-thumb { -webkit-appearance:none; width:10px; height:10px; border-radius:2px; background:var(--accent); border:2px solid #fff; cursor:grab; box-shadow:0 0 0 1px rgba(0,0,0,.5); }
-            .pnl-color-hue-slider::-moz-range-thumb { width:10px; height:10px; border-radius:2px; background:var(--accent); border:2px solid #fff; }
-            .pnl-color-swatch-lg { width:18px; height:18px; border-radius:2px; border:1px solid #444; flex-shrink:0; }
-
-            /* opacity slider */
-            .pnl-color-opacity-row { display:flex; align-items:center; gap:6px; }
-            .pnl-color-opacity-track { flex:1; height:8px; border-radius:4px; position:relative; overflow:hidden; }
-            .pnl-color-opacity-checker { position:absolute; inset:0; background-image:linear-gradient(45deg,#444 25%,transparent 25%),linear-gradient(-45deg,#444 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#444 75%),linear-gradient(-45deg,transparent 75%,#444 75%); background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0; }
+            .pnl-color-hue-slider::-webkit-slider-thumb {
+                -webkit-appearance:none; width:12px; height:12px; border-radius:50%;
+                background:#fff; border:1px solid #888; cursor:grab;
+                box-shadow:0 1px 3px rgba(0,0,0,.5);
+            }
+            .pnl-color-swatch-lg { width:18px; height:18px; border-radius:3px; border:none; box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,255,255,.04); flex-shrink:0; }
+            .pnl-color-opacity-row { display:flex; align-items:center; gap:7px; }
+            .pnl-color-opacity-track { flex:1; height:8px; border-radius:99px; position:relative; overflow:hidden; }
+            .pnl-color-opacity-checker {
+                position:absolute; inset:0;
+                background-image:linear-gradient(45deg,#444 25%,transparent 25%),linear-gradient(-45deg,#444 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#444 75%),linear-gradient(-45deg,transparent 75%,#444 75%);
+                background-size:6px 6px; background-position:0 0,0 3px,3px -3px,-3px 0;
+            }
             .pnl-color-opacity-grad { position:absolute; inset:0; }
             .pnl-color-opacity-input { -webkit-appearance:none; appearance:none; position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; margin:0; }
-            .pnl-color-opacity-input::-webkit-slider-thumb { -webkit-appearance:none; width:10px; height:10px; }
-            .pnl-opacity-num { font-size:10px; color:var(--accent); width:32px; text-align:right; background:transparent; border:none; outline:none; font-family:inherit; cursor:ew-resize; }
-            .pnl-opacity-num:focus { cursor:text; border-bottom:1px solid var(--accent); }
-
-            /* RGB fields */
+            .pnl-color-opacity-input::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; }
+            .pnl-opacity-num {
+                font-size:10px; color:var(--accent); width:34px; text-align:right;
+                background:var(--pnl-bg-input); border:1px solid var(--pnl-border-row); border-radius:3px;
+                outline:none; font-family:inherit; padding:3px 4px; cursor:ew-resize; transition:border-color .1s;
+            }
+            .pnl-opacity-num:hover { border-color:#555; }
+            .pnl-opacity-num:focus { cursor:text; border-color:var(--accent); }
             .pnl-rgb-row-inner { display:flex; gap:4px; }
-            .pnl-rgb-field { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; }
-            .pnl-rgb-lbl  { font-size:8px; color:#555; text-transform:uppercase; }
-            .pnl-rgb-inp  { width:100%; background:#2a2a2f; border:1px solid #3a3a40; color:var(--accent); font-size:10px; font-family:inherit; text-align:center; padding:2px 3px; outline:none; border-radius:2px; }
+            .pnl-rgb-field { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; }
+            .pnl-rgb-lbl { font-size:8px; color:var(--pnl-label); text-transform:uppercase; letter-spacing:.08em; }
+            .pnl-rgb-inp {
+                width:100%; background:var(--pnl-bg-input); border:1px solid var(--pnl-border-row); border-radius:3px;
+                color:var(--accent); font-size:10px; font-family:inherit;
+                text-align:center; padding:3px; outline:none; transition:border-color .1s;
+            }
+            .pnl-rgb-inp:hover { border-color:#555; }
             .pnl-rgb-inp:focus { border-color:var(--accent); }
 
-            /* ── Select ─────────────────────────────────────────── */
-            .pnl-select { flex:1; min-width:0; background:#2a2a2f; border:1px solid #3a3a40; color:#c8c8d0; font-size:10px; font-family:inherit; padding:3px 20px 3px 7px; cursor:pointer; outline:none; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0l3.5 4L7 0z' fill='%23666'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 7px center; border-radius:2px; }
-            .pnl-select:focus { border-color:var(--accent); }
+            /* ── Select / List ── */
+            .pnl-select, .pnl-list {
+                flex:1; min-width:0; background:var(--pnl-bg-input); border:1px solid var(--pnl-border-row); color:var(--pnl-text);
+                font-size:10px; font-family:inherit; padding:4px 20px 4px 7px; cursor:pointer;
+                outline:none; appearance:none; -webkit-appearance:none; border-radius:3px;
+                background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0l3.5 4L7 0z' fill='%23666'/%3E%3C/svg%3E");
+                background-repeat:no-repeat; background-position:right 7px center;
+                transition:border-color .1s;
+            }
+            .pnl-select:hover, .pnl-list:hover { border-color:#555; }
+            .pnl-select:focus, .pnl-list:focus { border-color:var(--accent); }
 
-            /* ── Text ───────────────────────────────────────────── */
-            .pnl-text-input { flex:1; min-width:0; background:#2a2a2f; border:1px solid #3a3a40; color:var(--accent); font-size:10px; font-family:inherit; padding:3px 7px; outline:none; border-radius:2px; }
+            /* ── Text input ── */
+            .pnl-text-input {
+                flex:1; min-width:0; background:var(--pnl-bg-input); border:1px solid var(--pnl-border-row); border-radius:3px;
+                color:var(--accent); font-size:10px; font-family:inherit;
+                padding:4px 7px; outline:none; transition:border-color .1s;
+            }
+            .pnl-text-input:hover { border-color:#555; }
             .pnl-text-input:focus { border-color:var(--accent); }
 
-            /* ── Stepper ────────────────────────────────────────── */
+            /* ── Stepper ── */
             .pnl-stepper { display:flex; align-items:center; gap:4px; flex:1; justify-content:flex-end; }
-            .pnl-stepper-btn { width:16px; height:16px; border-radius:2px; background:#2a2a2f; border:1px solid #3a3a40; color:#888; font-size:14px; line-height:1; cursor:pointer; user-select:none; display:flex; align-items:center; justify-content:center; transition:border-color .1s,color .1s; flex-shrink:0; }
-            .pnl-stepper-btn:hover { border-color:var(--accent); color:var(--accent); }
+            .pnl-stepper-btn {
+                width:18px; height:18px; border-radius:3px;
+                background:var(--pnl-bg-head); border:1px solid var(--pnl-border-row);
+                color:#777; font-size:14px; line-height:1; cursor:pointer; user-select:none;
+                display:flex; align-items:center; justify-content:center;
+                transition:border-color .1s,color .1s,background .1s; flex-shrink:0;
+            }
+            .pnl-stepper-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--pnl-bg); }
             .pnl-stepper-val { font-size:10px; color:var(--accent); min-width:40px; text-align:right; }
 
-            /* ── Button ─────────────────────────────────────────── */
-            .pnl-action-btn { display:block; width:calc(100% - 16px); margin:5px 8px; padding:6px 10px; background:#2a2a2f; border:1px solid #3a3a40; color:#c8c8d0; font-size:10px; font-family:inherit; font-weight:600; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; text-align:center; border-radius:2px; transition:border-color .15s,color .15s,background .15s; }
-            .pnl-action-btn:hover { border-color:var(--accent); color:var(--accent); background:#1f1f25; }
+            /* ── Action button ── */
+            .pnl-action-btn {
+                display:block; width:calc(100% - 16px); margin:6px 8px;
+                padding:6px 10px; background:var(--pnl-bg-head); border:1px solid var(--pnl-border-row); color:var(--pnl-text);
+                font-size:9px; font-family:inherit; font-weight:700;
+                text-transform:uppercase; letter-spacing:.1em;
+                cursor:pointer; text-align:center; border-radius:3px;
+                transition:border-color .15s,color .15s,background .15s;
+            }
+            .pnl-action-btn:hover { border-color:var(--accent); color:var(--accent); background:#202020; }
             .pnl-action-btn:active { opacity:.6; }
 
-            /* ── Link / popup ───────────────────────────────────── */
-            .pnl-link, .pnl-popup-tag { display:block; width:calc(100% - 16px); margin:5px 8px; padding:6px 10px; background:#252528; border:1px solid #3a3a40; color:#888; font-size:10px; font-family:inherit; cursor:pointer; text-align:center; border-radius:2px; transition:color .15s,border-color .15s; }
+            /* ── Link / popup ── */
+            .pnl-link, .pnl-popup-tag {
+                display:block; width:calc(100% - 16px); margin:6px 8px; padding:6px 10px;
+                background:var(--pnl-bg); border:1px solid var(--pnl-border); color:#666; font-size:10px;
+                font-family:inherit; cursor:pointer; text-align:center; border-radius:3px;
+                transition:color .15s,border-color .15s;
+            }
             .pnl-link:hover, .pnl-popup-tag:hover { color:var(--accent); border-color:var(--accent); }
 
-            /* ── Folder ─────────────────────────────────────────── */
-            .pnl-folder { border-bottom:1px solid #28282d; }
-            .f-head { display:flex; align-items:center; justify-content:space-between; padding:0 8px 0 10px; height:26px; background:#1a1a1d; cursor:pointer; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#666; border-bottom:1px solid #28282d; user-select:none; transition:color .1s; }
+            .pnl-folder { border-bottom:1px solid var(--pnl-border-row); }
+            .f-head {
+                display:flex; align-items:center; justify-content:space-between;
+                padding:0 10px 0 12px; height:28px; background:var(--pnl-bg-head); cursor:pointer;
+                font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em;
+                color:#666; border-bottom:1px solid var(--pnl-border-row); user-select:none; transition:color .1s;
+            }
             .f-head:hover { color:#aaa; }
-            .f-icon { font-size:9px; opacity:.6; }
-            .f-body { display:none; border-left:2px solid var(--accent); }
-            .f-body.is-open { display:block; }
+            .f-icon { font-size:9px; opacity:.7; }
+            .f-body {
+                display:grid; grid-template-rows:0fr;
+                transition:grid-template-rows .25s cubic-bezier(.4,0,.2,1);
+                border-left:2px solid var(--accent);
+            }
+            .f-body.is-open { grid-template-rows:1fr; }
+            .f-body-inner { min-height:0; overflow:hidden; }
 
-            /* ── Tabs ───────────────────────────────────────────── */
-            .pnl-tab-bar { display:flex; background:#17171a; border-bottom:1px solid #2e2e33; }
-            .pnl-tab { flex:1; padding:6px 4px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; color:#444; text-align:center; border-bottom:2px solid transparent; transition:color .12s,border-color .12s; user-select:none; }
+            /* ── Tabs ── */
+            .pnl-tab-bar { display:flex; background:var(--pnl-bg-input); border-bottom:1px solid var(--pnl-border-row); }
+            .pnl-tab {
+                flex:1; padding:9px 4px; font-size:9px; font-weight:700; text-transform:uppercase;
+                letter-spacing:.07em; cursor:pointer; color:#4a4a4a; text-align:center;
+                border-bottom:2px solid transparent; transition:color .12s,border-color .12s; user-select:none;
+            }
             .pnl-tab:hover { color:#888; }
             .pnl-tab.is-active { color:var(--accent); border-bottom-color:var(--accent); }
             .pnl-tab-panels { overflow:hidden; }
@@ -2419,78 +2541,96 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
             .pnl-tab-panel.is-active { display:block; }
             .pnl-tab-panel.slide-left  { animation:tp-left  .18s cubic-bezier(.16,1,.3,1); }
             .pnl-tab-panel.slide-right { animation:tp-right .18s cubic-bezier(.16,1,.3,1); }
-            @keyframes tp-left  { from{opacity:0;transform:translateX(10px)} to{opacity:1;transform:none} }
-            @keyframes tp-right { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
+            @keyframes tp-left  { from{opacity:0;transform:translateX(8px)}  to{opacity:1;transform:none} }
+            @keyframes tp-right { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:none} }
 
-            /* ── Point2D ────────────────────────────────────────── */
-            .pnl-point2d-wrap { padding:6px 8px 7px 10px; border-bottom:1px solid #28282d; }
-            .pnl-point2d-top  { display:flex; align-items:center; gap:5px; margin-bottom:5px; }
-            .pnl-point2d-lbl  { font-size:10px; color:#888; flex:1; }
-            .pnl-xy-inp   { width:52px; background:#2a2a2f; border:1px solid #3a3a40; border-bottom:1px dotted #555; color:var(--accent); font-size:10px; font-family:inherit; padding:2px 5px; outline:none; text-align:center; border-radius:2px 2px 0 0; cursor:ew-resize; transition:border-bottom-color .1s; }
-            .pnl-xy-inp:hover { border-bottom-color:var(--accent); }
-            .pnl-xy-inp:focus { border-color:var(--accent); border-bottom:1px solid var(--accent); cursor:text; border-radius:2px; }
-            .pnl-xy-label { font-size:9px; color:#555; }
-            .pnl-point2d-pad  { position:relative; width:100%; height:100px; background:#17171a; border:1px solid #2e2e33; cursor:crosshair; overflow:hidden; }
-            .pnl-point2d-canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
-            .pnl-point2d-handle { position:absolute; width:9px; height:9px; background:var(--accent); border-radius:2px; transform:translate(-50%,-50%); pointer-events:none; box-shadow:0 0 0 1px rgba(0,0,0,.5); }
-
-            /* ── Hard separator ─────────────────────────────────── */
-            .pnl-hr { height:1px; background:#2e2e33; margin:0; border:none; }
-
-            /* ── Screw / Rotary knob ────────────────────────────── */
-            .pnl-screw-canvas { width:36px; height:36px; cursor:ew-resize; flex-shrink:0; }
-
-            /* ── Checkbox (boolean) ─────────────────────────────── */
-            .pnl-checkbox { width:16px; height:16px; border-radius:3px; background:#2a2a2f; border:1px solid #3a3a40; cursor:pointer; position:relative; transition:background .12s,border-color .12s; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-            .pnl-checkbox.on { background:var(--accent); border-color:var(--accent); }
-            .pnl-checkbox::after { content:''; display:block; width:9px; height:5px; border-left:1.5px solid transparent; border-bottom:1.5px solid transparent; transform:rotate(-45deg) translate(1px,-1px); transition:border-color .12s; }
-            .pnl-checkbox.on::after { border-color:#000; }
-
-            /* ── Segment tabs ───────────────────────────────────── */
-            .pnl-seg-bar { display:flex; background:#17171a; border-bottom:1px solid #2e2e33; padding:4px 8px; gap:2px; }
-            .pnl-seg { flex:1; padding:4px 4px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; cursor:pointer; color:#555; text-align:center; background:#1a1a1d; border:1px solid #2e2e33; border-radius:2px; transition:color .12s,background .12s,border-color .12s; user-select:none; }
-            .pnl-seg:hover { color:#888; }
+            /* ── Segment tabs ── */
+            .pnl-seg-bar { display:flex; background:var(--pnl-bg-input); border-bottom:1px solid var(--pnl-border-row); padding:4px 8px; gap:3px; }
+            .pnl-seg {
+                flex:1; padding:4px; font-size:9px; font-weight:700; text-transform:uppercase;
+                letter-spacing:.06em; cursor:pointer; color:#555; text-align:center;
+                background:var(--pnl-bg-head); border:1px solid var(--pnl-border); border-radius:3px;
+                transition:color .12s,background .12s,border-color .12s; user-select:none;
+            }
+            .pnl-seg:hover { color:#999; border-color:#555; }
             .pnl-seg.is-active { color:#111; background:var(--accent); border-color:var(--accent); }
 
-            /* ── Cubic Bezier ───────────────────────────────────── */
-            .pnl-bezier-wrap { padding:6px 8px 8px 10px; border-bottom:1px solid #28282d; }
-            .pnl-bezier-lbl-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }
-            .pnl-bezier-canvas { display:block; width:100%; height:100px; background:#17171a; border:1px solid #2e2e33; cursor:crosshair; }
+            /* ── Point 2D ── */
+            .pnl-point2d-wrap { padding:6px 10px 8px 12px; border-bottom:1px solid var(--pnl-border-row); }
+            .pnl-point2d-top  { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+            .pnl-point2d-lbl  { font-size:10px; color:var(--pnl-label); flex:1; }
+            .pnl-xy-inp {
+                width:54px; background:var(--pnl-bg-input); border:1px solid var(--pnl-border-row); border-radius:3px;
+                color:var(--accent); font-size:10px; font-family:inherit; padding:3px 5px; outline:none;
+                text-align:center; cursor:ns-resize; transition:border-color .1s;
+            }
+            .pnl-xy-inp:hover { border-color:#555; }
+            .pnl-xy-inp:focus { border-color:var(--accent); cursor:text; }
+            .pnl-xy-label { font-size:9px; color:#555; }
+            .pnl-point2d-pad {
+                position:relative; width:100%; height:100px;
+                background:var(--pnl-bg-input); border:1px solid var(--pnl-border);
+                cursor:crosshair; overflow:hidden; border-radius:3px;
+            }
+            .pnl-point2d-canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+            /* ── HR ── */
+            .pnl-hr { height:1px; background:var(--pnl-border-row); margin:0; border:none; }
 
-            /* ── Console log ────────────────────────────────────── */
-            .pnl-console-wrap { border-bottom:1px solid #28282d; }
-            .pnl-console-head { display:flex; align-items:center; justify-content:space-between; padding:4px 8px 4px 10px; }
-            .pnl-console-entries { background:#17171a; max-height:90px; overflow-y:auto; font-size:9px; color:#666; font-family:inherit; }
-            .pnl-console-entries::-webkit-scrollbar { width:3px; }
-            .pnl-console-entries::-webkit-scrollbar-thumb { background:#333; }
-            .pnl-console-entry { padding:2px 10px; border-bottom:1px solid #1e1e22; display:flex; justify-content:space-between; }
+            /* ── Screw ── */
+            .pnl-screw-canvas { width:36px; height:36px; cursor:ns-resize; flex-shrink:0; }
+
+            /* ── Bezier ── */
+            .pnl-bezier-wrap { padding:6px 10px 8px 12px; border-bottom:1px solid var(--pnl-border-row); }
+            .pnl-bezier-lbl-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+            .pnl-bezier-canvas { display:block; width:100%; height:100px; background:var(--pnl-bg-input); border:1px solid var(--pnl-border); cursor:crosshair; border-radius:3px; }
+
+            /* ── Console ── */
+            .pnl-console-wrap { border-bottom:1px solid var(--pnl-border-row); }
+            .pnl-console-head { display:flex; align-items:center; justify-content:space-between; padding:5px 10px 5px 12px; }
+            .pnl-console-entries { background:var(--pnl-bg-input); max-height:90px; overflow-y:auto; font-size:9px; color:#666; font-family:inherit; }
+            .pnl-console-entries::-webkit-scrollbar { width:4px; }
+            .pnl-console-entries::-webkit-scrollbar-thumb { background:#444; border-radius:99px; }
+            .pnl-console-entries::-webkit-scrollbar-thumb:hover { background:#555; }
+            .pnl-console-entry { padding:2px 10px; border-bottom:1px solid var(--pnl-border-row); display:flex; justify-content:space-between; }
             .pnl-console-entry .val { color:var(--accent); }
 
-            /* ── Display (readonly value viewer) ────────────────── */
-            .pnl-display-wrap { background:#17171a; border-bottom:1px solid #28282d; padding:5px 10px; font-size:10px; }
-            .pnl-display-lbl { color:#555; font-size:9px; margin-bottom:3px; }
-            .pnl-display-val { color:var(--accent); white-space:pre-wrap; word-break:break-all; line-height:1.5; }
+            /* ── Display ── */
+            .pnl-display-wrap { background:var(--pnl-bg-input); border-bottom:1px solid var(--pnl-border-row); padding:6px 10px 6px 12px; font-size:10px; }
+            .pnl-display-lbl { color:var(--pnl-label); font-size:9px; margin-bottom:3px; letter-spacing:.05em; text-transform:uppercase; }
+            .pnl-display-val { color:var(--accent); white-space:pre-wrap; word-break:break-all; line-height:1.6; }
 
-            /* ── Point3D / Point4D ──────────────────────────────── */
-            .pnl-pointnd-wrap { padding:5px 8px 6px 10px; border-bottom:1px solid #28282d; }
-            .pnl-pointnd-top  { display:flex; align-items:center; gap:4px; margin-bottom:4px; }
-            .pnl-pointnd-lbl  { font-size:10px; color:#888; flex:1; }
-            .pnl-pointnd-row  { display:flex; gap:3px; }
-            .pnl-pointnd-field{ flex:1; display:flex; flex-direction:column; gap:2px; }
-            .pnl-pointnd-axis { font-size:8px; color:#555; text-transform:uppercase; text-align:center; }
+            /* ── Point N-D ── */
+            .pnl-pointnd-wrap { padding:5px 10px 7px 12px; border-bottom:1px solid var(--pnl-border-row); }
+            .pnl-pointnd-top  { display:flex; align-items:center; gap:4px; margin-bottom:5px; }
+            .pnl-pointnd-lbl  { font-size:10px; color:var(--pnl-label); flex:1; }
+            .pnl-pointnd-row  { display:flex; gap:4px; }
+            .pnl-pointnd-field{ flex:1; display:flex; flex-direction:column; gap:3px; }
+            .pnl-pointnd-axis { font-size:8px; color:var(--pnl-label); text-transform:uppercase; text-align:center; letter-spacing:.08em; }
 
-            /* ── List (tweakpane-style) ──────────────────────────── */
-            .pnl-list { flex:1; min-width:0; background:#2a2a2f; border:1px solid #3a3a40; color:#c8c8d0; font-size:10px; font-family:inherit; padding:3px 20px 3px 7px; cursor:pointer; outline:none; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0l3.5 4L7 0z' fill='%23666'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 7px center; border-radius:2px; }
-            .pnl-list:focus { border-color:var(--accent); }
-
-            /* ── Modal ──────────────────────────────────────────── */
-            .pnl-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); display:none; align-items:center; justify-content:center; z-index:150000; }
-            .pnl-modal { background:#1f1f22; border:1px solid var(--accent); padding:20px; width:300px; font-family:ui-monospace,monospace; }
-            .pnl-modal h3 { color:var(--accent); font-size:11px; text-transform:uppercase; margin-bottom:10px; }
+            /* ── Modal ── */
+            .pnl-modal-overlay {
+                position:fixed; inset:0; background:rgba(0,0,0,.75);
+                backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+                display:none; align-items:center; justify-content:center; z-index:150000;
+            }
+            .pnl-modal {
+                background:var(--pnl-bg); border:1px solid var(--accent); padding:20px; width:300px;
+                font-family:'Geist Mono',ui-monospace,monospace; border-radius:4px;
+                box-shadow:0 8px 32px rgba(0,0,0,.7);
+            }
+            .pnl-modal h3 { color:var(--accent); font-size:11px; text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }
             .pnl-modal p  { font-size:10px; color:#888; line-height:1.6; margin-bottom:14px; }
-            .pnl-modal-btns { display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid #2e2e33; padding-top:12px; }
-            .pnl-modal-btn { background:#2a2a2f; border:1px solid #3a3a40; color:#c8c8d0; padding:5px 10px; cursor:pointer; font-size:10px; font-family:inherit; border-radius:2px; }
+            .pnl-modal-btns { display:flex; gap:8px; flex-wrap:wrap; border-top:1px solid var(--pnl-border-row); padding-top:12px; }
+            .pnl-modal-btn {
+                background:var(--pnl-bg-head); border:1px solid var(--pnl-border-row); color:var(--pnl-text);
+                padding:5px 12px; cursor:pointer; font-size:10px; font-family:inherit;
+                border-radius:3px; transition:border-color .1s,color .1s;
+            }
             .pnl-modal-btn:hover { border-color:var(--accent); color:var(--accent); }
+            .p-chevron { transition:transform .2s ease; display:block; }
+            .pnl-main.is-minimized .p-chevron { transform:rotate(-90deg); }
+            .f-chevron { transition:transform .2s ease; display:block; }
+            .f-head.is-open .f-chevron { transform:rotate(180deg); }
             `;
             document.head.appendChild(s);
         }
@@ -2517,7 +2657,15 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
         const win = document.createElement('div');
         win.className = `pnl-main${collapsed?' is-minimized':''}`;
         win.style.setProperty('--accent', accent);
-        win.innerHTML = `<div class="pnl-head"><span class="pnl-title">${title}</span><span class="p-btn">${collapsed?'▸':'▾'}</span></div><div class="pnl-body"></div>`;
+        const themeVars = theme || {};
+        win.style.setProperty('--pnl-bg',         themeVars.bg        || '#1e1e1e');
+        win.style.setProperty('--pnl-bg-head',    themeVars.bgHead    || '#252525');
+        win.style.setProperty('--pnl-bg-input',   themeVars.bgInput   || '#1a1a1a');
+        win.style.setProperty('--pnl-border',     themeVars.border    || '#333');
+        win.style.setProperty('--pnl-border-row', themeVars.borderRow || '#2a2a2a');
+        win.style.setProperty('--pnl-text',       themeVars.text      || '#b0b0b0');
+        win.style.setProperty('--pnl-label',      themeVars.label     || '#999');
+        win.innerHTML = `<div class="pnl-head"><span class="pnl-title">${title}</span><span class="p-btn"><svg class="p-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="2,3 5,7 8,3"/></svg></span></div><div class="pnl-body"></div>`;
         document.body.appendChild(win);
 
         const showModal = m => {
@@ -2533,14 +2681,14 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
         const makeScrub = (el, getVal, setVal, step, min, max) => {
             const dec = String(step).includes('.') ? String(step).split('.')[1].length : 0;
             const clamp = v => Math.min(max??Infinity, Math.max(min??-Infinity, parseFloat(v.toFixed(dec+4))));
-            let startX, startV, moved;
+            let startY, startV, moved;
             el.addEventListener('mousedown', e => {
                 if (document.activeElement === el) return;
                 e.preventDefault();
-                startX=e.clientX; startV=getVal(); moved=false;
+                startY=e.clientY; startV=getVal(); moved=false;
                 const onMove = e => {
-                    if (Math.abs(e.clientX - startX) > 2) moved = true;
-                    setVal(clamp(startV + (e.clientX - startX) * step));
+                    if (Math.abs(e.clientY - startY) > 2) moved = true;
+                    setVal(clamp(startV + (startY - e.clientY) * step));
                 };
                 const onUp = () => {
                     window.removeEventListener('mousemove', onMove);
@@ -2766,6 +2914,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                     const row=document.createElement('div'); row.className='pnl-console-entry';
                     const t=document.createElement('span'); t.style.color='#555'; t.innerText=item.label||item.key||'log';
                     const v=document.createElement('span'); v.className='val'; v.innerText=fmt;
+                    row.style.background=entries.children.length%2===0?'#1c1c1c':'var(--pnl-bg-input)';
                     row.append(t,v); entries.appendChild(row);
                     while(entries.children.length>maxLines) entries.removeChild(entries.firstChild);
                     entries.scrollTop=entries.scrollHeight;
@@ -2786,6 +2935,8 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                 val.innerText=fmt(proxy[item.key]??'—');
                 wrap.append(lbl,val); container.appendChild(wrap);
                 if(item.key) bind(item.key,v=>val.innerText=fmt(v));
+                // re-read after proxy is fully populated (ESM timing)
+                setTimeout(()=>{ val.innerText=fmt(proxy[item.key]??'—'); },0);
                 return;
             }
 
@@ -2829,10 +2980,11 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
             }
             if (item.type==='folder') {
                 const f=document.createElement('div'); f.className='pnl-folder';
-                const fh=document.createElement('div'); fh.className='f-head'; fh.innerHTML=`<span>${item.label}</span><span class="f-icon">▸</span>`;
+                const fh=document.createElement('div'); fh.className='f-head'; fh.innerHTML=`<span>${item.label}</span><span class="f-icon"><svg class="f-chevron" width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="1,3 4.5,6.5 8,3"/></svg></span>`;
                 const fb=document.createElement('div'); fb.className='f-body';
-                fh.onclick=()=>{ const o=fb.classList.toggle('is-open'); fh.querySelector('.f-icon').innerText=o?'▾':'▸'; updateStack(); };
-                item.children.forEach(c=>addRow(c,fb)); f.appendChild(fh); f.appendChild(fb); container.appendChild(f); return;
+                const fbInner=document.createElement('div'); fbInner.className='f-body-inner';
+                fh.onclick=()=>{ fb.classList.toggle('is-open'); fh.classList.toggle('is-open'); updateStack(); };
+                item.children.forEach(c=>addRow(c,fbInner)); fb.appendChild(fbInner); f.appendChild(fh); f.appendChild(fb); container.appendChild(f); return;
             }
             if (item.type==='text') {
                 const sep=document.createElement('div'); sep.className='pnl-sep'; sep.innerText=item.label; container.appendChild(sep); return;
@@ -2855,8 +3007,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
 
                 const pad=document.createElement('div'); pad.className='pnl-point2d-pad';
                 const cv2=document.createElement('canvas'); cv2.className='pnl-point2d-canvas';
-                const handle=document.createElement('div'); handle.className='pnl-point2d-handle';
-                pad.append(cv2, handle);
+                pad.append(cv2);
 
                 const drawPad = (hx, hy) => {
                     const w=pad.offsetWidth||230, h=pad.offsetHeight||100;
@@ -2864,7 +3015,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                     const c=cv2.getContext('2d');
                     c.clearRect(0,0,w,h);
                     // dashed grid lines at center
-                    c.strokeStyle='#2e2e36'; c.lineWidth=1; c.setLineDash([3,3]);
+                    c.strokeStyle=win.style.getPropertyValue('--pnl-border-row')||'#2a2a2a'; c.lineWidth=1; c.setLineDash([3,3]);
                     c.beginPath(); c.moveTo(w/2,0); c.lineTo(w/2,h); c.stroke();
                     c.beginPath(); c.moveTo(0,h/2); c.lineTo(w,h/2); c.stroke();
                     c.setLineDash([]);
@@ -2875,13 +3026,19 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                     c.setLineDash([]);
                     // center dot
                     c.fillStyle='#444'; c.beginPath(); c.arc(w/2,h/2,2,0,Math.PI*2); c.fill();
+                    // crosshair handle
+                    const px2=hx/100*w, py2=hy/100*h;
+                    const ha=win.style.getPropertyValue('--accent')||accent;
+                    c.strokeStyle=ha; c.lineWidth=1; c.lineCap='round'; c.setLineDash([]);
+                    c.beginPath(); c.arc(px2,py2,3,0,Math.PI*2); c.stroke();
+                    c.beginPath(); c.moveTo(px2-7,py2); c.lineTo(px2+7,py2); c.stroke();
+                    c.beginPath(); c.moveTo(px2,py2-7); c.lineTo(px2,py2+7); c.stroke();
                 };
 
                 const cur=proxy[item.key]||{x:0,y:0};
                 const setHandle=(x,y)=>{
                     x=Math.max(xR[0],Math.min(xR[1],x)); y=Math.max(yR[0],Math.min(yR[1],y));
                     const hx=toPercX(x), hy=toPercY(y);
-                    handle.style.left=hx+'%'; handle.style.top=hy+'%';
                     if(document.activeElement!==xInp)xInp.value=fmtXY(x);
                     if(document.activeElement!==yInp)yInp.value=fmtXY(y);
                     drawPad(hx,hy);
@@ -2918,18 +3075,19 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                 const num=document.createElement('input'); num.className='pnl-num narrow'; num.type='text'; num.value=fmt(proxy[item.key]??min);
 
                 const drawScrew=v=>{
+                    const liveAccent=win.style.getPropertyValue('--accent')||accent;
                     const c=cv3.getContext('2d'); c.clearRect(0,0,36,36);
                     const cx=18,cy=18;
-                    // subtle circle background
-                    c.strokeStyle='#2e2e33'; c.lineWidth=1.5;
+                    // track ring
+                    c.strokeStyle=themeVars.borderRow||'#2a2a2a'; c.lineWidth=2;
                     c.beginPath(); c.arc(cx,cy,13,0,Math.PI*2); c.stroke();
-                    // two bars rotated by angle
+                    // clock hand
                     const ang=valToAngle(v)*Math.PI/180;
-                    c.save(); c.translate(cx,cy); c.rotate(ang);
-                    c.fillStyle=accent;
-                    c.fillRect(-4.5,-1.5,3.5,3);
-                    c.fillRect(1,-1.5,3.5,3);
-                    c.restore();
+                    c.strokeStyle=liveAccent; c.lineWidth=1.5; c.lineCap='round';
+                    c.beginPath(); c.moveTo(cx,cy); c.lineTo(cx+Math.sin(ang)*9,cy-Math.cos(ang)*9); c.stroke();
+                    // center dot
+                    c.fillStyle='#555';
+                    c.beginPath(); c.arc(cx,cy,2,0,Math.PI*2); c.fill();
                 };
                 drawScrew(proxy[item.key]??min);
 
@@ -2972,12 +3130,12 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                     c.beginPath(); c.moveTo(tx(0),ty(0)); c.lineTo(cp1x,cp1y); c.stroke();
                     c.beginPath(); c.moveTo(tx(1),ty(1)); c.lineTo(cp2x,cp2y); c.stroke();
                     // curve
-                    c.strokeStyle=accent; c.lineWidth=1.5;
+                    c.strokeStyle=win.style.getPropertyValue('--accent')||accent; c.lineWidth=1.5;
                     c.beginPath(); c.moveTo(tx(0),ty(0));
                     c.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,tx(1),ty(1)); c.stroke();
                     // handles
                     [[cp1x,cp1y],[cp2x,cp2y]].forEach(([hx,hy])=>{
-                        c.fillStyle='#c8c8d0'; c.strokeStyle='#444'; c.lineWidth=1;
+                        c.fillStyle='#bbb'; c.strokeStyle='#444'; c.lineWidth=1;
                         c.beginPath(); c.arc(hx,hy,4,0,Math.PI*2); c.fill(); c.stroke();
                     });
                 };
@@ -3060,7 +3218,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                     ? item.options
                     : Object.entries(item.options).map(([value,text])=>({text,value}));
                 opts.forEach(({text,value})=>{ const o=document.createElement('option'); o.value=value; o.innerText=text; if(String(proxy[item.key])===String(value))o.selected=true; sel.appendChild(o); });
-                sel.onchange=e=>proxy[item.key]=e.target.value;
+                sel.onchange=e=>{ const raw=e.target.value; const match=opts.find(o=>String(o.value)===raw); proxy[item.key]=match?match.value:raw; };
                 bind(item.key,v=>sel.value=v); ctrls.appendChild(sel);
             } else if (item.type==='inputtext') {
                 const inp=document.createElement('input'); inp.className='pnl-text-input'; inp.type='text';
@@ -3087,6 +3245,13 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
 
         layout.forEach(item => addRow(item, win.querySelector('.pnl-body')));
 
+        // flush all bindings once after build so display/bezier/console show initial values
+        setTimeout(() => {
+            bindings.forEach((fns, key) => {
+                if (state[key] !== undefined) fns.forEach(fn => fn(state[key]));
+            });
+        }, 0);
+
         const updateStack = () => { let o=20; document.querySelectorAll('.pnl-main').forEach(p=>{ p.style.top=o+'px'; o+=p.offsetHeight+8; }); };
         const toggle = () => {
             const body = win.querySelector('.pnl-body');
@@ -3096,17 +3261,20 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                 body.style.maxHeight = body.scrollHeight + 'px';
                 requestAnimationFrame(() => {
                     win.classList.add('is-minimized');
-                    setTimeout(updateStack, 360);
+                    setTimeout(updateStack, 300);
                 });
             } else {
                 win.classList.remove('is-minimized');
-                setTimeout(updateStack, 360);
+                body.style.maxHeight = '';
+                setTimeout(updateStack, 300);
             }
-            win.querySelector('.p-btn').innerText = minimizing ? '▸' : '▾';
         };
         win.querySelector('.p-btn').onclick = toggle;
-        if (closeKey) window.addEventListener('keydown', e=>{ if(e.key===closeKey) toggle(); });
-        setTimeout(updateStack, 50);
+        let _ckHandler;
+        if (closeKey) { _ckHandler = e=>{ if(e.key===closeKey) toggle(); }; window.addEventListener('keydown', _ckHandler); }
+        // clean up key listener when panel element is removed from DOM
+        new MutationObserver((_, obs) => { if (!document.body.contains(win)) { if(_ckHandler) window.removeEventListener('keydown', _ckHandler); obs.disconnect(); } }).observe(document.body, {childList:true, subtree:true});
+        setTimeout(updateStack, 0);
     };
 
     /* ── Config normalizer: supports new {ui, controls} format ─────────── */
@@ -3117,7 +3285,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
             out.title     = cfg.ui.title     ?? out.title ?? 'Panel';
             out.collapsed = cfg.ui.collapsed ?? out.collapsed ?? false;
             out.closeKey  = cfg.ui.closeKey  ?? out.closeKey  ?? null;
-            out.theme     = { accent: cfg.ui.accent ?? '#00ff88' };
+            out.theme     = { accent: cfg.ui.accent ?? '#00ff88', ...cfg.ui.theme };
         }
         out.layout = cfg.controls ?? [];
         out.state  = {};
@@ -3134,30 +3302,12 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
         return out;
     };
 
-
-    /* ── Expose internal builder for inline demo use ─────────────────── */
-    window._pnlBuilder = (rawConfig, index, container) => {
-        const cfg = normalize(rawConfig);
-        const { title, state={}, layout=[], theme={}, collapsed=false, closeKey=null } = cfg;
-        // patch container support: builder creates fixed panel, we need inline
-        if (container) {
-            // Temporarily override body.appendChild behavior via the existing builder
-            // by passing a modified config that forces inline positioning via CSS
-            cfg._container = container;
-        }
-        builder(cfg, index);
-        // Move the panel into the container if provided
-        if (container) {
-            const panels = document.querySelectorAll('.pnl-main');
-            const last = panels[panels.length - 1];
-            if (last && !container.contains(last)) {
-                last.style.cssText += ';position:relative!important;right:auto!important;top:auto!important;bottom:auto!important;left:auto!important;z-index:1!important;width:100%!important;box-shadow:none!important;';
-                container.appendChild(last);
-            }
-        }
-    };
-
     window.addEventListener('DOMContentLoaded', () => { if(window.pnlConfigs) window.pnlConfigs.forEach((c,i)=>builder(normalize(c),i)); });
+
+    window.cntrlPNL = function(config) {
+        const index = window.pnlStates.length;
+        return builder(normalize(config), index);
+    };
 })();
 </script>
 
