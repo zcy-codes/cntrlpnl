@@ -11,7 +11,7 @@ Floating debug panels for the browser. Drop in the script, write a config object
 **Script tag**
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@latest/cntrlPNL.js"></script>
 ```
 
 Set `window.pnlConfigs` before or after load — either works:
@@ -26,7 +26,7 @@ Set `window.pnlConfigs` before or after load — either works:
 
 ```html
 <script type="module">
-  import { cntrlPNL } from 'https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.esm.js'
+  import { cntrlPNL } from 'https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@latest/cntrlPNL.esm.js'
 
   const state = cntrlPNL({ ui: { title: 'dev' }, controls: [] })
 </script>
@@ -39,7 +39,7 @@ That's the only real difference between the two — `state` is returned directly
 ## Quickstart
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@latest/cntrlPNL.js"></script>
 <script>
   window.pnlConfigs = [
     {
@@ -295,7 +295,7 @@ ui: { accent: '#00d4ff' }
 <canvas id="c" width="800" height="600"></canvas>
 
 <script type="module">
-  import { cntrlPNL } from 'https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@main/cntrlPNL.esm.js'
+  import { cntrlPNL } from 'https://cdn.jsdelivr.net/gh/zcy-codes/cntrlpnl@latest/cntrlPNL.esm.js'
 
   const state = cntrlPNL({
     ui: { title: 'renderer', accent: '#00ff88', closeKey: 'h' },
