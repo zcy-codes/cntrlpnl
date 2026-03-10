@@ -782,7 +782,7 @@ pre::before {
   <div class="sidebar-top">
     <div class="logo" onclick="showPage('overview')">
       <span class="logo-word">cntrlPNL</span>
-      <span class="logo-version">v3.5</span>
+      <span class="logo-version">v3.6</span>
     </div>
     <div class="sidebar-search">
       <input type="text" placeholder="search docs..." id="search-input" oninput="handleSearch(this.value)">
@@ -860,6 +860,10 @@ pre::before {
       <button class="nav-item" onclick="showPage('theming')" data-page="theming">
         <span class="nav-dot"></span> Theming
       </button>
+      <a class="nav-item" href="theme-creator.html" target="_blank" style="text-decoration:none;opacity:0.7;font-size:10px;padding-left:28px;display:flex;align-items:center;gap:6px;">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        theme creator ↗
+      </a>
       <button class="nav-item" onclick="showPage('config')" data-page="config">
         <span class="nav-dot"></span> Config reference
       </button>
@@ -1425,7 +1429,10 @@ s.blend; <span class="cmt">// → 'add'</span></div></pre>
     <pre data-lang="js"><div class="code-inner">{ <span class="key">type</span>: <span class="str">'stepper'</span>, <span class="key">key</span>: <span class="str">'layers'</span>, <span class="key">label</span>: <span class="str">'layers'</span>, <span class="key">default</span>: <span class="num">3</span>, <span class="key">min</span>: <span class="num">1</span>, <span class="key">max</span>: <span class="num">16</span>, <span class="key">step</span>: <span class="num">1</span> }</div></pre>
 
     <div class="callout">
-      <p><strong>min and max are optional.</strong> Without them the stepper is unbounded — it'll count down to negative infinity or up to positive infinity. Add them when there's a meaningful range.</p>
+      <p><strong>Drag to scrub.</strong> The value display is a scrub input — drag it up or down to change the value continuously, or click it to type directly. The − and + buttons still work for single-step changes.</p>
+    </div>
+    <div class="callout">
+      <p><strong>min and max are optional.</strong> Without them the stepper is unbounded. Add them when there's a meaningful range.</p>
     </div>
 
     <table class="props">
@@ -1435,7 +1442,7 @@ s.blend; <span class="cmt">// → 'add'</span></div></pre>
       <tr><td>default</td><td>number</td><td>—</td><td>Initial value</td></tr>
       <tr><td>min</td><td>number</td><td>−∞</td><td>Lower bound (optional)</td></tr>
       <tr><td>max</td><td>number</td><td>+∞</td><td>Upper bound (optional)</td></tr>
-      <tr><td>step</td><td>number</td><td>1</td><td>Amount added/subtracted per click</td></tr>
+      <tr><td>step</td><td>number</td><td>1</td><td>Amount added/subtracted per click or scrub</td></tr>
     </table>
   </div>
 
@@ -1542,6 +1549,7 @@ s.origin = { <span class="key">x</span>: <span class="num">0.5</span>, <span cla
     <pre data-lang="js"><div class="code-inner">{
   <span class="key">type</span>:     <span class="str">'folder'</span>,
   <span class="key">label</span>:    <span class="str">'post fx'</span>,
+  <span class="key">open</span>:     <span class="kw">true</span>,  <span class="cmt">// start expanded (default: false)</span>
   <span class="key">children</span>: [
     { <span class="key">type</span>: <span class="str">'slider'</span>, <span class="key">key</span>: <span class="str">'bloom'</span>,   <span class="key">default</span>: <span class="num">0</span>,   <span class="key">min</span>: <span class="num">0</span>, <span class="key">max</span>: <span class="num">1</span>, <span class="key">step</span>: <span class="num">0.01</span> },
     { <span class="key">type</span>: <span class="str">'slider'</span>, <span class="key">key</span>: <span class="str">'sharpen'</span>, <span class="key">default</span>: <span class="num">0.2</span>, <span class="key">min</span>: <span class="num">0</span>, <span class="key">max</span>: <span class="num">1</span>, <span class="key">step</span>: <span class="num">0.01</span> },
@@ -1683,13 +1691,21 @@ el.style.transitionTimingFunction = <span class="str">`cubic-bezier(${x1},${y1},
   <!-- CONSOLE / DISPLAY -->
   <div class="doc-section" id="s-console">
     <h2>console</h2>
-    <p>A scrollable log panel embedded in the control panel. If <code>key</code> is provided, it auto-samples the bound state value every time it changes. You can also call <code>._log(msg)</code> directly on the element for manual logging. Has a clear button in the header. Useful for surfacing internal state changes or debug events without leaving the page.</p>
+    <p>A scrollable log panel embedded in the control panel. If <code>key</code> is provided, it auto-samples the bound state value every time it changes. You can also call <code>state['key$log'](msg)</code> from anywhere in your code to push messages manually. Has a clear button in the header.</p>
     <pre data-lang="js"><div class="code-inner">{
   <span class="key">type</span>: <span class="str">'console'</span>,
   <span class="key">key</span>:  <span class="str">'velocity'</span>,  <span class="cmt">// auto-logs when velocity changes</span>
   <span class="key">label</span>: <span class="str">'velocity'</span>,
   <span class="key">rows</span>: <span class="num">5</span>          <span class="cmt">// max visible lines</span>
 }</div></pre>
+    <div class="callout">
+      <p><strong>Manual logging via <code>key$log</code>.</strong> After building, the state proxy exposes a <code>key$log</code> function for each console control. Call it from your render loop or event handlers to push messages without waiting for a state change.</p>
+    </div>
+    <pre data-lang="js"><div class="code-inner"><span class="key">const</span> <span class="fn">s</span> = <span class="fn">cntrlPNL</span>(config);
+
+<span class="cmt">// later, from anywhere:</span>
+s[<span class="str">'velocity$log'</span>](<span class="str">'collision detected'</span>);
+s[<span class="str">'velocity$log'</span>](s.speed.toFixed(2));</div></pre>
     <div id="demo-console" class="demo">
       <div class="demo-header"><span class="demo-label">live demo</span></div>
       <div class="demo-body"></div>
@@ -1896,6 +1912,13 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
     <span class="key">label</span>:     <span class="str">'#666666'</span>,
   }
 }</div></pre>
+
+    <h3>Theme Creator</h3>
+    <p>Use the interactive Theme Creator to tweak all tokens visually with a live preview panel. It outputs a ready-to-paste <code>ui: { accent, theme: { ... } }</code> block.</p>
+    <a href="theme-creator.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;margin-top:6px;padding:9px 18px;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;color:var(--text-bright);font-family:var(--font-mono);font-size:12px;text-decoration:none;transition:border-color .15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+      Open Theme Creator →
+    </a>
   </div>
 
 
@@ -1917,6 +1940,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
   <span class="key">ui</span>: {
     <span class="key">title</span>:     <span class="str">'panel'</span>,      <span class="cmt">// panel header text</span>
     <span class="key">accent</span>:    <span class="str">'#00ff88'</span>,   <span class="cmt">// accent color (hex)</span>
+    <span class="key">width</span>:     <span class="num">300</span>,          <span class="cmt">// panel width in px (default 260)</span>
     <span class="key">collapsed</span>: <span class="kw">false</span>,       <span class="cmt">// start collapsed?</span>
     <span class="key">closeKey</span>:  <span class="str">'h'</span>,         <span class="cmt">// keyboard toggle key</span>
   },
@@ -1956,6 +1980,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
       <tr><td>accent</td><td>string</td><td>'#00ff88'</td><td>Hex color for all highlighted elements</td></tr>
       <tr><td>collapsed</td><td>boolean</td><td>false</td><td>Whether the panel starts collapsed</td></tr>
       <tr><td>closeKey</td><td>string</td><td>null</td><td>Key to toggle collapse (matched against event.key)</td></tr>
+      <tr><td>width</td><td>number</td><td>260</td><td>Panel width in pixels</td></tr>
     </table>
   </div>
 
@@ -2063,7 +2088,30 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
   <div class="page-hero">
     <div class="page-eyebrow">reference</div>
     <h1 class="page-title">Changelog</h1>
-    <p class="page-desc">Version history and migration notes.</p>
+    <p class="page-desc">Version history and migration notes. Latest: <strong>v3.6</strong> — builder return fix, folder <code>open</code>, stepper scrub, <code>width</code> option, Theme Creator.</p>
+  </div>
+
+  <div class="doc-section" id="s-v3-6">
+    <h2>v3.6</h2>
+    <p>New features, a critical return-value fix, and the Theme Creator tool.</p>
+
+    <h3>Bug fix</h3>
+    <ul style="margin: 10px 0 18px 20px; font-family: var(--font-sans); font-size: 13.5px; line-height: 2.1; color: var(--text);">
+      <li><strong style="color:var(--text-bright)">cntrlPNL() now returns the proxy</strong> — <code>builder()</code> was missing its <code>return proxy</code> statement, so <code>const s = cntrlPNL(config)</code> returned <code>undefined</code>. Fixed. All three call paths (<code>cntrlPNL</code>, <code>_pnlBuilder</code>, internal builder) now return the reactive state proxy.</li>
+    </ul>
+
+    <h3>New features</h3>
+    <ul style="margin: 10px 0 18px 20px; font-family: var(--font-sans); font-size: 13.5px; line-height: 2.1; color: var(--text);">
+      <li><strong style="color:var(--text-bright)">folder <code>open: true</code></strong> — folders can now start expanded: <code>{ type: 'folder', open: true, children: [...] }</code></li>
+      <li><strong style="color:var(--text-bright)">ui.width</strong> — set a custom panel width in pixels: <code>ui: { width: 320 }</code></li>
+      <li><strong style="color:var(--text-bright)">Stepper scrub</strong> — the value display is now a scrub input. Drag up/down to change continuously, click to type. Works like slider number inputs.</li>
+      <li><strong style="color:var(--text-bright)">console <code>key$log</code></strong> — console controls expose their log function on the state proxy as <code>state['myKey$log']('message')</code> for external use</li>
+      <li><strong style="color:var(--text-bright)"><code>window._pnlBuilder</code> native</strong> — the container-mount helper is now part of the engine itself, no longer a docs-only patch. Signature: <code>_pnlBuilder(config, index?, container?)</code></li>
+      <li><strong style="color:var(--text-bright)">Theme Creator</strong> — standalone <code>theme-creator.html</code> tool for visually editing all 8 theme tokens with live preview and copy-to-clipboard output</li>
+    </ul>
+
+    <h3>No migration needed</h3>
+    <p>Drop-in replacement for v3.5. The only observable difference is that <code>cntrlPNL()</code> now correctly returns the state proxy — code that was already using <code>window.pnlStates[n]</code> is unaffected.</p>
   </div>
 
   <div class="doc-section" id="s-v3-5">
@@ -2259,9 +2307,9 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
 // ══════════════════════════════════════════════
 // cntrlPNL ENGINE (full inline)
 // ══════════════════════════════════════════════
+/* cntrlPNL v3.6 — https://github.com/zcy-codes/cntrlpnl */
 (function () {
     window.pnlStates = [];
-
     /* ─── Global tooltip ──────────────────────────────────────────────── */
     const tip = document.createElement('div');
     tip.style = 'position:fixed;background:#1a1a1e;border:1px solid #555;color:#ccc;padding:6px 10px;font-size:10px;z-index:200000;visibility:hidden;pointer-events:none;max-width:180px;line-height:1.5;font-family:\'Geist Mono\',ui-monospace,monospace;';
@@ -2276,7 +2324,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
     const hslToRgb = (h,s,l) => { h/=360;s/=100;l/=100; const hue2rgb=(p,q,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;}; let r,g,b; if(s===0){r=g=b=l;}else{const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q;r=hue2rgb(p,q,h+1/3);g=hue2rgb(p,q,h);b=hue2rgb(p,q,h-1/3);} return {r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)}; };
 
     const builder = (config, index) => {
-        const { title, state={}, layout=[], theme={}, collapsed=false, closeKey=null } = config;
+        const { title, state={}, layout=[], theme={}, collapsed=false, closeKey=null, width=260 } = config;
 
         if (!document.getElementById('pnl-css')) {
             const s = document.createElement('style');
@@ -2285,7 +2333,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
             @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap');
 
             .pnl-main {
-                position:fixed; right:20px; width:260px;
+                position:fixed; right:20px; width:var(--pnl-width,260px);
                 background:var(--pnl-bg); border:1px solid var(--pnl-border);
                 font-family:'Geist Mono',ui-monospace,'SF Mono','Cascadia Code',monospace;
                 font-size:11px; color:var(--pnl-text); z-index:10000;
@@ -2487,7 +2535,9 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                 transition:border-color .1s,color .1s,background .1s; flex-shrink:0;
             }
             .pnl-stepper-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--pnl-bg); }
-            .pnl-stepper-val { font-size:10px; color:var(--accent); min-width:40px; text-align:right; }
+            .pnl-stepper-val { font-size:10px; color:var(--accent); min-width:40px; text-align:right; background:var(--pnl-bg-input); border:1px solid var(--pnl-border-row); border-radius:3px; outline:none; font-family:inherit; padding:2px 5px; cursor:ns-resize; transition:border-color .1s; }
+            .pnl-stepper-val:hover { border-color:#555; }
+            .pnl-stepper-val:focus { cursor:text; border-color:var(--accent); }
 
             /* ── Action button ── */
             .pnl-action-btn {
@@ -2657,6 +2707,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
         const win = document.createElement('div');
         win.className = `pnl-main${collapsed?' is-minimized':''}`;
         win.style.setProperty('--accent', accent);
+        win.style.setProperty('--pnl-width', width + 'px');
         const themeVars = theme || {};
         win.style.setProperty('--pnl-bg',         themeVars.bg        || '#1e1e1e');
         win.style.setProperty('--pnl-bg-head',    themeVars.bgHead    || '#252525');
@@ -2922,6 +2973,8 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                 // auto-sample if key is provided
                 if(item.key){
                     bind(item.key, v => wrap._log(typeof v==='number'?v.toFixed(typeof item.step==='number'?String(item.step).split('.')[1]?.length??0:3):JSON.stringify(v)));
+                    // expose log fn on state: state['key$log'](msg)
+                    state[item.key+'$log'] = wrap._log;
                 }
                 return;
             }
@@ -2980,8 +3033,8 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
             }
             if (item.type==='folder') {
                 const f=document.createElement('div'); f.className='pnl-folder';
-                const fh=document.createElement('div'); fh.className='f-head'; fh.innerHTML=`<span>${item.label}</span><span class="f-icon"><svg class="f-chevron" width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="1,3 4.5,6.5 8,3"/></svg></span>`;
-                const fb=document.createElement('div'); fb.className='f-body';
+                const fh=document.createElement('div'); fh.className=`f-head${item.open?' is-open':''}`; fh.innerHTML=`<span>${item.label}</span><span class="f-icon"><svg class="f-chevron" width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="1,3 4.5,6.5 8,3"/></svg></span>`;
+                const fb=document.createElement('div'); fb.className=`f-body${item.open?' is-open':''}`;
                 const fbInner=document.createElement('div'); fbInner.className='f-body-inner';
                 fh.onclick=()=>{ fb.classList.toggle('is-open'); fh.classList.toggle('is-open'); updateStack(); };
                 item.children.forEach(c=>addRow(c,fbInner)); fb.appendChild(fbInner); f.appendChild(fh); f.appendChild(fb); container.appendChild(f); return;
@@ -3232,11 +3285,12 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
                 const clamp=v=>Math.min(max,Math.max(min,parseFloat(v.toFixed(10))));
                 const wrap=document.createElement('div'); wrap.className='pnl-stepper';
                 const dBtn=document.createElement('button'); dBtn.className='pnl-stepper-btn'; dBtn.innerText='−';
-                const valEl=document.createElement('span'); valEl.className='pnl-stepper-val'; valEl.innerText=fmt(proxy[item.key]??0);
+                const valEl=document.createElement('input'); valEl.className='pnl-stepper-val'; valEl.type='text'; valEl.value=fmt(proxy[item.key]??0);
                 const iBtn=document.createElement('button'); iBtn.className='pnl-stepper-btn'; iBtn.innerText='+';
                 dBtn.onclick=()=>proxy[item.key]=clamp((proxy[item.key]??0)-step);
                 iBtn.onclick=()=>proxy[item.key]=clamp((proxy[item.key]??0)+step);
-                bind(item.key,v=>valEl.innerText=fmt(v));
+                makeScrub(valEl,()=>proxy[item.key]??0,v=>proxy[item.key]=clamp(v),step,min,max);
+                bind(item.key,v=>{ if(document.activeElement!==valEl) valEl.value=fmt(v); });
                 wrap.append(dBtn,valEl,iBtn); ctrls.appendChild(wrap);
             }
 
@@ -3275,6 +3329,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
         // clean up key listener when panel element is removed from DOM
         new MutationObserver((_, obs) => { if (!document.body.contains(win)) { if(_ckHandler) window.removeEventListener('keydown', _ckHandler); obs.disconnect(); } }).observe(document.body, {childList:true, subtree:true});
         setTimeout(updateStack, 0);
+        return proxy;
     };
 
     /* ── Config normalizer: supports new {ui, controls} format ─────────── */
@@ -3285,6 +3340,7 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
             out.title     = cfg.ui.title     ?? out.title ?? 'Panel';
             out.collapsed = cfg.ui.collapsed ?? out.collapsed ?? false;
             out.closeKey  = cfg.ui.closeKey  ?? out.closeKey  ?? null;
+            out.width     = cfg.ui.width     ?? out.width;
             out.theme     = { accent: cfg.ui.accent ?? '#00ff88', ...cfg.ui.theme };
         }
         out.layout = cfg.controls ?? [];
@@ -3304,6 +3360,22 @@ document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentL
 
     window.addEventListener('DOMContentLoaded', () => { if(window.pnlConfigs) window.pnlConfigs.forEach((c,i)=>builder(normalize(c),i)); });
 
+    /* ── Container-mount helper (used by docs/demos/theme-creator) ─── */
+    window._pnlBuilder = function(config, index, container) {
+        const idx = index ?? window.pnlStates.length;
+        const cfg = normalize(config);
+        const proxy = builder(cfg, idx);
+        if (container) {
+            const panels = document.querySelectorAll('.pnl-main');
+            const last = panels[panels.length - 1];
+            if (last && !container.contains(last)) {
+                last.style.cssText += ';position:relative!important;right:auto!important;top:auto!important;left:auto!important;z-index:1!important;width:100%!important;box-shadow:none!important;';
+                container.appendChild(last);
+            }
+        }
+        return proxy;
+    };
+
     window.cntrlPNL = function(config) {
         const index = window.pnlStates.length;
         return builder(normalize(config), index);
@@ -3322,10 +3394,10 @@ const PAGES = {
   quickstart:{ name: 'Quickstart',      subnav: ['first-panel', 'reading-state', 'writing-state', 'render-loop', 'next-steps'] },
   controls:  { name: 'Controls',        subnav: ['controls-index','slider','toggle','color','select','stepper','inputtext','point2d','point3d','screw','bezier','checkbox','list','console','display','separator','onchange','layout'] },
   guide:     { name: 'State',           subnav: ['proxy', 'multiple', 'render', 'init-timing'] },
-  theming:   { name: 'Theming',         subnav: ['accent', 'collapse', 'multi-accent'] },
+  theming:   { name: 'Theming',         subnav: ['accent', 'collapse', 'multi-accent', 'theme-tokens'] },
   config:    { name: 'Config reference',subnav: ['new-format', 'legacy-format', 'ui-options'] },
   examples:  { name: 'Examples',        subnav: ['webgl', 'canvas2d', 'multi-example'] },
-  changelog: { name: 'Changelog',       subnav: ['v3-5', 'v3-1', 'v3', 'v2'] },
+  changelog: { name: 'Changelog',       subnav: ['v3-6', 'v3-5', 'v3-1', 'v3', 'v2'] },
 };
 
 const SUBNAV_LABELS = {
@@ -3343,7 +3415,7 @@ const SUBNAV_LABELS = {
   'accent': 'Accent color', 'collapse': 'Keyboard toggle', 'multi-accent': 'Per-panel colors',
   'new-format': 'New format', 'legacy-format': 'Legacy format', 'ui-options': 'ui options',
   'webgl': 'WebGL / Three.js', 'canvas2d': 'Canvas 2D', 'multi-example': 'Multi-panel',
-  'v3-5': 'v3.5', 'v3-1': 'v3.1', 'v3': 'v3.0', 'v2': 'v2.0',
+  'v3-6': 'v3.6', 'v3-5': 'v3.5', 'v3-1': 'v3.1', 'v3': 'v3.0', 'v2': 'v2.0',
 };
 
 let currentPage = 'overview';
